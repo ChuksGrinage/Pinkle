@@ -1,0 +1,83 @@
+scalar DateTime
+scalar Date
+
+type User {
+	id: ID!
+	username: String!
+	firstName: String
+	lastName: String
+	email: String!
+	password: String!
+	dateJoined: DateTime!
+}
+
+extend type TokenAuth {
+	profile: Profile
+}
+
+enum State {
+	AL
+	AK
+	AZ
+	AR
+	CA
+	CO
+	CT
+	DC
+	DE
+	FL
+	GA
+	HI
+	ID
+	IL
+	IN
+	IA
+	KS
+	LA
+	ME
+	MD
+	MA
+	MI
+	MN
+	MS
+	MO
+	MT
+	NE
+	NV
+	NH
+	NJ
+	NM
+	NY
+	NC
+	ND
+	OH
+	OK
+	OR
+	PA
+	RI
+	SC
+	SD
+	TN
+	TX
+	UT
+	VT
+	VA
+	WA
+	WI
+	WY
+}
+
+type Profile {
+	user: User
+	dob: DateTime
+	city: String
+	state: State
+	zip_code: String
+	students: [Student]
+}
+
+type Student {
+	teacher: Profile
+	dob: DateTime
+	grade: String!
+}

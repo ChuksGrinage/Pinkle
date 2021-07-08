@@ -1,0 +1,19 @@
+overwrite: true
+schema:
+ - 'http://localhost:8000/graphql/':
+documents: 'src/**/*.graphql'
+generates:
+ src/generated/index.ts:
+  plugins:
+   - typescript
+   - typescript-operations
+   - typescript-react-query
+  config:
+   fetcher:
+    endpoint: 'http://localhost:8000/graphql/'
+    fetchParams:
+     credentials: 'include'
+     headers:
+      'Content-Type': 'application/json'
+
+      # "authorization": localStorage(localStorageKey) ? `JWT ${localStorage(localStorageKey)}` : undefined
