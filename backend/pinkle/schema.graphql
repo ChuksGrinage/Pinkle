@@ -3,7 +3,7 @@ type Query {
 }
 
 type Mutation {
-	createPost(title: String!, content: String!): Post!
+	createPost(title: String!, description: String!): Post!
 }
 
 type Post {
