@@ -1,3 +1,17 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 # Create your models here.
+
+
+class User(AbstractUser, models.Model):
+    dob = models.DateField(null=True, blank=True)
+    city = models.CharField(null=True, blank=True, max_length=50)
+    state = models.CharField(null=True, blank=True, max_length=2)
+    zip_code = models.TextField(null=True, blank=True)
+
+
+class Student(models.Model):
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE)
+    dob = models.DateField(null=True, blank=True)
+    grade = models.CharField(max_length=3)

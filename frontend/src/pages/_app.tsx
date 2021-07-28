@@ -5,6 +5,7 @@ import theme from 'theme'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { AuthProvider } from 'components/contexts/auth-context'
 import { NavBar } from 'components'
+import { ReactQueryDevtools } from 'react-query/devtools'
 // import { UserProvider } from 'components/contexts/user-context'
 
 const queryClient = new QueryClient()
@@ -23,6 +24,7 @@ function MyApp({ Component, pageProps }) {
 					<ColorModeProvider options={{ useSystemColorMode: true }}>
 						<NavBar />
 						<Component {...pageProps} />
+						<ReactQueryDevtools initialIsOpen={false} />
 					</ColorModeProvider>
 				</ChakraProvider>
 			</AuthProvider>

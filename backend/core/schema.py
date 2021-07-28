@@ -1,14 +1,14 @@
-import account.schema
-import graphene
-import pinkle.schema
+# import account.schema
+# import graphene
+# import pinkle.schema
 
 
-class Query(pinkle.schema.Query, account.schema.Query, graphene.ObjectType):
-    pass
+# class Query(pinkle.schema.Query, account.schema.Query, graphene.ObjectType):
+#     pass
 
 
-class Mutation(account.schema.Mutation, graphene.ObjectType):
-    pass
+# class Mutation(account.schema.Mutation, graphene.ObjectType):
+#     pass
 
 
-schema = graphene.Schema(query=Query, mutation=Mutation)
+# schema = graphene.Schema(query=Query, mutation=Mutation)

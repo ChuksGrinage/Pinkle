@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,8 +26,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "graphene_django",
+    "ariadne.contrib.django",
     "pinkle",
+    "account",
 ]
 
 MIDDLEWARE = [
@@ -35,6 +37,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "ariadne_jwt.middleware.JSONWebTokenMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -109,21 +112,18 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-GRAPHENE = {
-    "SCHEMA": "core.schema.schema",
-    "MIDDLEWARE": [
-        "graphql_jwt.middleware.JSONWebTokenMiddleware",
-    ],
-}
-
-AUTHENTICATION_BACKENDS = [
-    "graphql_jwt.backends.JSONWebTokenBackend",
-    "django.contrib.auth.backends.ModelBackend",
-]
-
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
 ]
 
+AUTHENTICATION_BACKENDS = [
+    "ariadne_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 CORS_ALLOW_CREDENTIALS = True
+
+GRAPHQL_JWT = {"JWT_VERIFY_EXPIRATION": True, "JWT_EXPIRATION_DELTA": timedelta(days=30)}
+
+AUTH_USER_MODEL = "account.User"

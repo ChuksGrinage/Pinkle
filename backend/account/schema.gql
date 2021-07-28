@@ -1,0 +1,20 @@
+type User {
+	id: ID!
+	username: String!
+	firstName: String
+	lastName: String
+	email: String!
+	password: String!
+	dateJoined: DateTime!
+	dob: DateTime
+	city: String
+	state: String
+	zip_code: String
+	students: [Student]
+}
+
+type Student {
+	teacher: User
+	dob: DateTime
+	grade: String!
+}
