@@ -1,10 +1,11 @@
 import uuid
 
-from backend.pinkle.utils.utility_func import wsi_confidence
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from pinkle.utils.utility_func import wsi_confidence
 
 # Create your models here.
 
@@ -52,6 +53,7 @@ class Post(models.Model):
         def voteSetter(self, value):
             setattr(self, attr, max(0, value))
             self.wsi = wsi_confidence(self.up_votes, self.down_votes)
+
         return voteSetter
 
     @property
@@ -60,8 +62,8 @@ class Post(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(Post, self).__init__(*args, **kwargs)
-        Post.upvotes = property(lambda self: self.up_votes, Post._voteSetterWrapper('up_votes'))
-        Post.downvotes = property(lambda self: self.down_votes, Post._voteSetterWrapper('down_votes'))   
+        Post.upvotes = property(lambda self: self.up_votes, Post._voteSetterWrapper("up_votes"))
+        Post.downvotes = property(lambda self: self.down_votes, Post._voteSetterWrapper("down_votes"))
 
     def getComments(self, excluded=()):
         """:param excluded: exclude all posts with these uids and their descendants"""
@@ -71,7 +73,7 @@ class Post(models.Model):
         return comments
 
     def _addToIncludedComments(self, post):
-        if not hasattr(self, 'included_comments'):
+        if not hasattr(self, "included_comments"):
             self.included_comments = [post]
         else:
             self.included_comments.append(post)

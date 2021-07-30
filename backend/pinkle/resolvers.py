@@ -1,5 +1,5 @@
 from ariadne import convert_kwargs_to_snake_case
-from ariadne_jwt import login_required
+from ariadne_jwt.decorators import login_required
 from graphql import GraphQLError
 
 from .models import Post

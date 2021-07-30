@@ -13,7 +13,7 @@ type Query {
 type Mutation {
 	createPost(input: CreatePostInput!): Post!
 	updatePost(input: UpdatePostInput!): Post!
-	deletePost(input: PostId!): Boolean!
+	deletePost(postId: String!): Boolean!
 
 	signupUser(input: UserCredentials!): User!
 
