@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -12,6 +13,6 @@ class User(AbstractUser, models.Model):
 
 
 class Student(models.Model):
-    teacher = models.ForeignKey(User, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     dob = models.DateField(null=True, blank=True)
     grade = models.CharField(max_length=3)

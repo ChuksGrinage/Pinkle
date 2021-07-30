@@ -22,7 +22,10 @@ query.set_field("post", pinkle.resolvers.resolve_post)
 
 mutation = MutationType()
 mutation.set_field("createPost", pinkle.resolvers.resolve_create_post)
+mutation.set_field("deletePost", pinkle.resolvers.resolve_delete_post)
+
 mutation.set_field("signupUser", account.resolvers.resolve_signup_user)
+
 mutation.set_field("verifyToken", resolve_verify)
 mutation.set_field("refreshToken", resolve_refresh)
 mutation.set_field("tokenAuth", account.resolvers.resolve_token_auth)

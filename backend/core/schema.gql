@@ -12,10 +12,14 @@ type Query {
 
 type Mutation {
 	createPost(input: CreatePostInput!): Post!
+	updatePost(input: UpdatePostInput!): Post!
+	deletePost(input: PostId!): Boolean!
+
+	signupUser(input: UserCredentials!): User!
+
 	verifyToken(token: String!): VerifyToken
 	refreshToken(token: String!): RefreshToken
 	tokenAuth(username: String!, password: String!): TokenAuth
-	signupUser(input: UserCredentials!): User!
 }
 
 input UserCredentials {
@@ -24,9 +28,18 @@ input UserCredentials {
 	password: String!
 }
 
+input UpdatePostInput {
+	title: String
+	truncatedBody: String
+	body: String
+	grade: String
+	city: String
+	state: String
+	zipCode: String
+}
+
 input CreatePostInput {
 	title: String!
-	truncatedBody: String!
 	body: String!
 	grade: String
 	city: String
