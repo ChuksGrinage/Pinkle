@@ -1,13 +1,12 @@
 from ariadne import convert_kwargs_to_snake_case
-
-# from ariadne_jwt import login_required, token_auth
+from ariadne_jwt.decorators import login_required, token_auth
 from graphql import GraphQLError
 
 from account.models import User
 
 
 @convert_kwargs_to_snake_case
-# @token_auth
+@token_auth
 def resolve_token_auth(obj, info, **kwargs):
     """Gets current current user from context and returns a user, token and refresh token"""
     user = info.context.get("request").user
