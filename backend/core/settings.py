@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -46,6 +47,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "core.urls"
+
+AUTHENTICATION_BACKENDS = [
+    "ariadne_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+
+GRAPHQL_JWT = {"JWT_VERIFY_EXPIRATION": True, "JWT_EXPIRATION_DELTA": timedelta(days=30)}
 
 TEMPLATES = [
     {
@@ -120,13 +129,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
 ]
 
-AUTHENTICATION_BACKENDS = [
-    "ariadne_jwt.backends.JSONWebTokenBackend",
-    "django.contrib.auth.backends.ModelBackend",
-]
-
 CORS_ALLOW_CREDENTIALS = True
 
-GRAPHQL_JWT = {"JWT_VERIFY_EXPIRATION": True, "JWT_EXPIRATION_DELTA": timedelta(days=30)}
 
 AUTH_USER_MODEL = "account.User"
