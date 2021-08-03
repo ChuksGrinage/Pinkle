@@ -15,11 +15,11 @@ import {
 	InputLeftElement,
 	FormErrorMessage,
 } from '@chakra-ui/react'
-import { useAuth } from 'components/contexts/auth-context'
+// import { useAuth } from 'components/contexts/auth-context'
 import { useForm } from 'react-hook-form'
 
 const Index = () => {
-	const { signup } = useAuth()
+	// const { signup } = useAuth()
 	const {
 		register,
 		handleSubmit,
@@ -28,9 +28,9 @@ const Index = () => {
 	} = useForm()
 
 	const onSubmit = async userCredentials => {
-		signup(userCredentials, {
-			onError: error => console.log(error),
-		})
+		// signup(userCredentials, {
+		// 	onError: error => console.log(error),
+		// })
 	}
 
 	return (

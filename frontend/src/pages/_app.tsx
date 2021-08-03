@@ -3,7 +3,7 @@ import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
 // import { compose } from 'utils/react-utils'
 import theme from 'theme'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import { AuthProvider } from 'components/contexts/auth-context'
+// import { AuthProvider } from 'components/contexts/auth-context'
 import { NavBar } from 'components'
 // import { UserProvider } from 'components/contexts/user-context'
 
@@ -18,14 +18,11 @@ function MyApp({ Component, pageProps }) {
 	// )
 	return (
 		<QueryClientProvider client={queryClient}>
-			<AuthProvider>
 				<ChakraProvider resetCSS={true} theme={theme}>
 					<ColorModeProvider options={{ useSystemColorMode: true }}>
-						<NavBar />
 						<Component {...pageProps} />
 					</ColorModeProvider>
 				</ChakraProvider>
-			</AuthProvider>
 		</QueryClientProvider>
 	)
 }

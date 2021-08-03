@@ -7,11 +7,11 @@ import {
 	InputGroup,
 	InputLeftElement,
 } from '@chakra-ui/react'
-import { useAuth } from 'components/contexts/auth-context'
+// import { useAuth } from 'components/contexts/auth-context'
 import { useForm } from 'react-hook-form'
 
 const Index = () => {
-	const { login } = useAuth()
+	// const { login } = useAuth()
 	const {
 		register,
 		handleSubmit,
@@ -20,14 +20,14 @@ const Index = () => {
 	} = useForm()
 
 	const onSubmit = async userCredentials => {
-		login(userCredentials, {
-			onError: error => {
-				setError('password', {
-					type: 'server',
-					message: error.message,
-				})
-			},
-		})
+		// login(userCredentials, {
+		// 	onError: error => {
+		// 		setError('password', {
+		// 			type: 'server',
+		// 			message: error.message,
+		// 		})
+		// 	},
+		// })
 	}
 
 	return (
