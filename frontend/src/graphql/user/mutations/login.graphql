@@ -1,0 +1,8 @@
+mutation Login($username: String!, $password: String!) {
+	tokenAuth(username: $username, password: $password) {
+		token
+		user {
+			...UserCredentials
+		}
+	}
+}

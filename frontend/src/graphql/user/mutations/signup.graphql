@@ -1,0 +1,5 @@
+# mutation Signup($username: String!, $email: String!, $password: String) {
+# 	signupUser(username: $username, email: $email, password: $password) {
+# 		...UserCredentials
+# 	}
+# }

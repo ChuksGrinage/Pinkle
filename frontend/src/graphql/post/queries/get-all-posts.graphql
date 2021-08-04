@@ -2,10 +2,12 @@ query GetAllPosts {
 	posts {
 		id
 		title
-		content
+		body
+		truncatedBody
+		grade
 		createdAt
 		author {
-			username
+			...UserCredentials
 		}
 	}
 }
