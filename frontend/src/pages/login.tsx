@@ -7,8 +7,8 @@ import {
 	InputGroup,
 	InputLeftElement,
 } from '@chakra-ui/react'
-import { useAuth } from 'components/contexts/auth-context'
 import { useForm } from 'react-hook-form'
+import { useAuth } from '../../app/api/auth-provider'
 
 const Index = () => {
 	const { login } = useAuth()
@@ -20,14 +20,7 @@ const Index = () => {
 	} = useForm()
 
 	const onSubmit = async userCredentials => {
-		login(userCredentials, {
-			onError: error => {
-				setError('password', {
-					type: 'server',
-					message: error.message,
-				})
-			},
-		})
+		login(userCredentials)
 	}
 
 	return (

@@ -8,7 +8,6 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
     const res = await fetch("http://localhost:8000/graphql/", {
       method: "POST",
-      credentials: "include",
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify({ query, variables }),
     });

@@ -8,12 +8,12 @@ import {
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import React from 'react'
-import { useAuth } from 'components/contexts/auth-context'
-import useUser from 'shared/hooks/useUser'
+// import { useAuth } from 'components/contexts/auth-context'
+// import useUser from 'shared/hooks/useUser'
 
 export default function WithSubnavigation() {
-	const { logout } = useAuth()
-	const { user, isLoading } = useUser()
+	// const { logout } = useAuth()
+	// const { user, isLoading } = useUser()
 	// console.log(user)
 	// if (!user) return null
 
@@ -31,8 +31,8 @@ export default function WithSubnavigation() {
 						<Link>Forums</Link>
 					</NextLink>
 				</HStack>
-				<Text color='pinkle'>{user?.username}</Text>
-				<Button onClick={logout}>Logout</Button>
+				{/* <Text color='pinkle'>{user?.username}</Text>
+				<Button onClick={logout}>Logout</Button> */}
 			</HStack>
 		</Box>
 	)
