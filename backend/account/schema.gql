@@ -4,12 +4,11 @@ type User {
 	firstName: String
 	lastName: String
 	email: String!
-	password: String!
 	dateJoined: DateTime!
 	dob: DateTime
 	city: String
 	state: String
-	zip_code: String
+	zipCode: String
 	students: [Student]
 }
 

@@ -9,6 +9,7 @@ from account.models import User
 @token_auth
 def resolve_token_auth(obj, info, **kwargs):
     """Gets current current user from context and returns a user, token and refresh token"""
+    print(info.context)
     user = info.context.get("request").user
     return {"user": user}
 

@@ -12,7 +12,6 @@ generates:
    fetcher:
     endpoint: 'http://localhost:8000/graphql/'
     fetchParams:
-     credentials: 'include'
      headers:
       'Content-Type': 'application/json'
 

@@ -1,0 +1,13 @@
+# mutation CreatePost($title: String!, $content: String!) {
+# 	createPost(CreatePostInput: $title, body: $body, grade: $grade) {
+# 		id
+# 		title
+# 		body
+# 		truncatedBody
+# 		createdAt
+# 		grade
+# 		author {
+# 			...UserCredentials
+# 		}
+# 	}
+# }

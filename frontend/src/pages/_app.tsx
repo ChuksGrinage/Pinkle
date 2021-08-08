@@ -1,30 +1,32 @@
 import React from 'react'
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
-// import { compose } from 'utils/react-utils'
 import theme from 'theme'
 import { QueryClient, QueryClientProvider } from 'react-query'
-// import { AuthProvider } from 'components/contexts/auth-context'
-import { NavBar } from 'components'
+import { AuthGuard, AuthProvider } from 'components'
 import { ReactQueryDevtools } from 'react-query/devtools'
-// import { UserProvider } from 'components/contexts/user-context'
+// https://github.com/EatEmAll/django-djeddit
 
 const queryClient = new QueryClient()
 
 function MyApp({ Component, pageProps }) {
-	// const AppProviders = compose(
-	// 	[QueryClientProvider, { client: queryClient }],
-	// 	[ChakraProvider, { resetCSS: true, theme }],
-	// 	[ColorModeProvider, { options: { useSystemColorMode: true } }],
-	// 	AuthProvider,
-	// )
 	return (
 		<QueryClientProvider client={queryClient}>
-				<ChakraProvider resetCSS={true} theme={theme}>
-					<ColorModeProvider options={{ useSystemColorMode: true }}>
-						<Component {...pageProps} />
+			<ChakraProvider resetCSS={true} theme={theme}>
+				<ColorModeProvider options={{ useSystemColorMode: true }}>
+					<AuthProvider>
+						{/* <NavBar /> */}
+						{Component.requireAuth ? (
+							<AuthGuard>
+								<Component {...pageProps} />
+							</AuthGuard>
+						) : (
+							// public page
+							<Component {...pageProps} />
+						)}
 						<ReactQueryDevtools initialIsOpen={false} />
-					</ColorModeProvider>
-				</ChakraProvider>
+					</AuthProvider>
+				</ColorModeProvider>
+			</ChakraProvider>
 		</QueryClientProvider>
 	)
 }

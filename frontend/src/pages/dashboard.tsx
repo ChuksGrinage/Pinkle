@@ -1,6 +1,6 @@
 import { Avatar } from '@chakra-ui/avatar'
 import { SearchIcon } from '@chakra-ui/icons'
-import { IconButton, Input, useOutsideClick, Button } from "@chakra-ui/react"
+import { IconButton, Input, useOutsideClick, Button } from '@chakra-ui/react'
 import {
 	Flex,
 	Grid,
@@ -11,10 +11,10 @@ import {
 	Stack,
 	Text,
 } from '@chakra-ui/layout'
-import React, {useState, useRef} from 'react'
+import React, { useState, useRef } from 'react'
 import NextLink from 'next/link'
 import { useQueryClient } from 'react-query'
-import { localStorageKey } from 'shared/contstants'
+// import { localStorageKey } from 'shared/contstants'
 // import { BlogCard } from 'components'
 // import { NavBar } from 'components'
 
@@ -29,9 +29,10 @@ interface UserI {
 
 const user: UserI = {
 	name: 'Jenny Danaleigh',
-	photo:'https://petspruce.com/wp-content/uploads/2018/10/What-Is-The-Weight-Of-4-Month-Lab-Puppy.jpg',
+	photo:
+		'https://petspruce.com/wp-content/uploads/2018/10/What-Is-The-Weight-Of-4-Month-Lab-Puppy.jpg',
 	city: 'Dallas',
-	state: 'TX'
+	state: 'TX',
 }
 
 const users = [
@@ -71,7 +72,7 @@ const Dashboard = () => {
 	const queryCache = useQueryClient()
 	const logout = () => {
 		console.log('logging out...')
-		window.localStorage.removeItem(localStorageKey)
+		// window.localStorage.removeItem(localStorageKey)
 		queryCache.invalidateQueries('Me')
 	}
 
@@ -79,27 +80,50 @@ const Dashboard = () => {
 
 	useOutsideClick({
 		ref: ref,
-		handler: () => setIsSearchActive(false)
-	  })
+		handler: () => setIsSearchActive(false),
+	})
 
 	const [isSearchActive, setIsSearchActive] = useState(false)
 	return (
 		<Grid px='10' templateColumns='repeat(5, 1fr)' gap={4}>
 			<GridItem padding='5' colSpan={5}>
-				<Flex borderRadius='xl' shadow='md' padding='5' justifyContent='space-between'>
+				<Flex
+					borderRadius='xl'
+					shadow='md'
+					padding='5'
+					justifyContent='space-between'
+				>
 					<Flex align='center' w='lg' ref={ref}>
-						<IconButton aria-label="Search" marginRight='5' icon={<SearchIcon   h='8' w='8' />} onClick={() => setIsSearchActive(!isSearchActive)}/>
-						{ isSearchActive ? <Flex w='lg'><Input variant="flushed" w={80}/> <Text paddingTop='5' pl='3' opacity={0.67}>{user.city}, {user.state}</Text></Flex> :
-						<Flex borderLeft='solid 1px' borderColor='pinkle' paddingLeft='2'>
-						<Avatar size='lg' name={user.name} src={user?.photo} marginRight='1rem' />
-						
-						<Stack>
-							<Heading color='pinkle' fontFamily='novaMono' as='h5' size='md'>
-								Welcome back, {user.name}
-							</Heading>
-							<Text>Nice to see you!</Text>
-						</Stack>
-						</Flex>}
+						<IconButton
+							aria-label='Search'
+							marginRight='5'
+							icon={<SearchIcon h='8' w='8' />}
+							onClick={() => setIsSearchActive(!isSearchActive)}
+						/>
+						{isSearchActive ? (
+							<Flex w='lg'>
+								<Input variant='flushed' w={80} />{' '}
+								<Text paddingTop='5' pl='3' opacity={0.67}>
+									{user.city}, {user.state}
+								</Text>
+							</Flex>
+						) : (
+							<Flex borderLeft='solid 1px' borderColor='pinkle' paddingLeft='2'>
+								<Avatar
+									size='lg'
+									name={user.name}
+									src={user?.photo}
+									marginRight='1rem'
+								/>
+
+								<Stack>
+									<Heading color='pinkle' fontFamily='novaMono' as='h5' size='md'>
+										Welcome back, {user.name}
+									</Heading>
+									<Text>Nice to see you!</Text>
+								</Stack>
+							</Flex>
+						)}
 					</Flex>
 					<HStack spacing='10' padding='1rem'>
 						<NextLink href='/forum'>

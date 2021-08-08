@@ -14,10 +14,14 @@ import {
 // import { useAuth } from 'components/contexts/auth-context'
 import useUser from 'shared/hooks/useUser'
 
-const Index = () => {
+export default function Index() {
 	return (
-		<div>test</div>
+		<Grid px='10' templateColumns='repeat(5, 1fr)' gap={4}>
+			<GridItem padding='5' colSpan={5}>
+				main site
+			</GridItem>
+		</Grid>
 	)
 }
 
-export default Index
+Index.requireAuth = true
