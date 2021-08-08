@@ -1,8 +1,8 @@
+import { useAuth } from 'components/auth-provider'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useAuth } from '../../../app/api/auth-provider'
 
-export function AuthGuard({ children }: { children: JSX.Element }) {
+export default function AuthGuard({ children }: { children: JSX.Element }) {
 	const { isError, user, isLoading, setRedirect } = useAuth()
 	const router = useRouter()
 	useEffect(() => {

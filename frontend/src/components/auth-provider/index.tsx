@@ -16,7 +16,7 @@ function clearRedirect() {
 	return window.sessionStorage.removeItem(REDIRECT_KEY)
 }
 const AUTH_TOKEN = 'AUTH_TOKEN'
-export function AuthProvider({ children }) {
+function AuthProvider({ children }) {
 	const { push, query } = useRouter()
 	const {
 		mutate,
@@ -68,10 +68,11 @@ export function AuthProvider({ children }) {
 	)
 }
 
-export const useAuth = () => {
+const useAuth = () => {
 	const context = useContext(authContext)
 	if (context === undefined) {
 		throw new Error('useAuth must be used within AuthProvider')
 	}
 	return context
 }
+export { useAuth, AuthProvider }
