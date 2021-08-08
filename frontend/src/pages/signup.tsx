@@ -28,9 +28,9 @@ const Index = () => {
 	} = useForm()
 
 	const onSubmit = async userCredentials => {
-		signup(userCredentials, {
-			onError: error => console.log(error),
-		})
+		// signup(userCredentials, {
+		// 	onError: error => console.log(error),
+		// })
 	}
 
 	return (

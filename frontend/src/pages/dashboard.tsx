@@ -1,7 +1,7 @@
 import { Avatar } from '@chakra-ui/avatar'
-import { CheckCircleIcon } from '@chakra-ui/icons'
+import { SearchIcon } from '@chakra-ui/icons'
+import { IconButton, Input, useOutsideClick, Button } from "@chakra-ui/react"
 import {
-	Box,
 	Flex,
 	Grid,
 	GridItem,
@@ -9,12 +9,9 @@ import {
 	HStack,
 	Link,
 	Stack,
-	StackDivider,
 	Text,
-	VStack,
 } from '@chakra-ui/layout'
-import { Button, Image, List, ListIcon, ListItem } from '@chakra-ui/react'
-import React from 'react'
+import React, {useState, useRef} from 'react'
 import NextLink from 'next/link'
 import { useQueryClient } from 'react-query'
 import { localStorageKey } from 'shared/contstants'
@@ -26,12 +23,15 @@ import { localStorageKey } from 'shared/contstants'
 interface UserI {
 	name: string
 	photo?: string
+	city: string
+	state: string
 }
 
-const user = {
+const user: UserI = {
 	name: 'Jenny Danaleigh',
-	photo:
-		'https://petspruce.com/wp-content/uploads/2018/10/What-Is-The-Weight-Of-4-Month-Lab-Puppy.jpg',
+	photo:'https://petspruce.com/wp-content/uploads/2018/10/What-Is-The-Weight-Of-4-Month-Lab-Puppy.jpg',
+	city: 'Dallas',
+	state: 'TX'
 }
 
 const users = [
@@ -74,18 +74,32 @@ const Dashboard = () => {
 		window.localStorage.removeItem(localStorageKey)
 		queryCache.invalidateQueries('Me')
 	}
+
+	const ref = useRef()
+
+	useOutsideClick({
+		ref: ref,
+		handler: () => setIsSearchActive(false)
+	  })
+
+	const [isSearchActive, setIsSearchActive] = useState(false)
 	return (
 		<Grid px='10' templateColumns='repeat(5, 1fr)' gap={4}>
 			<GridItem padding='5' colSpan={5}>
-				<Flex borderRadius='xl' shadow='md' padding='5' justify='space-between'>
-					<Flex align='center'>
+				<Flex borderRadius='xl' shadow='md' padding='5' justifyContent='space-between'>
+					<Flex align='center' w='lg' ref={ref}>
+						<IconButton aria-label="Search" marginRight='5' icon={<SearchIcon   h='8' w='8' />} onClick={() => setIsSearchActive(!isSearchActive)}/>
+						{ isSearchActive ? <Flex w='lg'><Input variant="flushed" w={80}/> <Text paddingTop='5' pl='3' opacity={0.67}>{user.city}, {user.state}</Text></Flex> :
+						<Flex borderLeft='solid 1px' borderColor='pinkle' paddingLeft='2'>
 						<Avatar size='lg' name={user.name} src={user?.photo} marginRight='1rem' />
+						
 						<Stack>
 							<Heading color='pinkle' fontFamily='novaMono' as='h5' size='md'>
 								Welcome back, {user.name}
 							</Heading>
 							<Text>Nice to see you!</Text>
 						</Stack>
+						</Flex>}
 					</Flex>
 					<HStack spacing='10' padding='1rem'>
 						<NextLink href='/forum'>
@@ -98,99 +112,6 @@ const Dashboard = () => {
 						</Button>
 					</HStack>
 				</Flex>
-			</GridItem>
-			<GridItem colSpan={3}>
-				<Box>
-					<Heading
-						as='h3'
-						size='md'
-						fontFamily='novaMono'
-						color='gray.500'
-						textAlign='left'
-					>
-						Trending topics
-					</Heading>
-
-					<VStack mt='5' divider={<StackDivider borderColor='gray.200' />}>
-						{users.map(({ photo, name, post }) => (
-							<Box key={name} shadow='lg' borderRadius='xl' p='5'>
-								<HStack mb='5'>
-									<Avatar src={photo} name={name} />
-									<Heading flexGrow={1} color='pinkle' size='sm'>
-										{name}
-									</Heading>
-									<Text fontFamily='novaMono' fontSize='xs' color='gray.500'>
-										{post.date}
-									</Text>
-								</HStack>
-								{post.image && (
-									<Image
-										mb='5'
-										src='https://static01.nyt.com/images/2019/12/17/books/review/17fatbooks/17fatbooks-superJumbo.jpg?quality=90&auto=webp'
-									/>
-								)}
-
-								<Heading
-									fontStyle='italic'
-									fontWeight='light'
-									size='sm'
-									as='h2'
-									display='inline-block'
-									isTruncated
-								>
-									<Link>{post.title}</Link>
-								</Heading>
-								<Text color='gray.500' fontSize='xs' as='p'>
-									{post.description}
-								</Text>
-							</Box>
-						))}
-					</VStack>
-				</Box>
-			</GridItem>
-			<GridItem colSpan={2}>
-				<Box borderRadius='xl' h='30rem' shadow='lg' p='5'>
-					<Text fontWeight='light' fontStyle='italic' color='gray.500'>
-						Upcoming Events
-					</Text>
-					<VStack spacing='5'>
-						<Heading as='h2' fontWeight='medium' color='pinkle' size='lg'>
-							Homeschooling, the first steps.
-						</Heading>
-						<Text as='p' fontSize='sm' fontStyle='italic' color='gray.500'>
-							hosted by <Link color='pinkle'>Gloria Dean</Link>
-						</Text>
-						<List spacing={3}>
-							<ListItem>
-								<ListIcon as={CheckCircleIcon} color='green.500' />
-								Lorem ipsum dolor
-							</ListItem>
-							<ListItem>
-								<ListIcon as={CheckCircleIcon} color='green.500' />
-								Assumenda, quia temporibus
-							</ListItem>
-							<ListItem>
-								<ListIcon as={CheckCircleIcon} color='green.500' />
-								Quidem, ipsam illum
-							</ListItem>
-							<ListItem>
-								<ListIcon as={CheckCircleIcon} color='green.500' />
-								Lorem ipsum dolor
-							</ListItem>
-							<ListItem>
-								<ListIcon as={CheckCircleIcon} color='green.500' />
-								Assumenda, quia temporibus
-							</ListItem>
-							<ListItem>
-								<ListIcon as={CheckCircleIcon} color='green.500' />
-								Quidem, ipsam illum
-							</ListItem>
-						</List>
-						<Button colorScheme='pink' variant='outline'>
-							Learn More
-						</Button>
-					</VStack>
-				</Box>
 			</GridItem>
 		</Grid>
 	)

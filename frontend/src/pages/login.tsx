@@ -7,6 +7,7 @@ import {
 	InputGroup,
 	InputLeftElement,
 } from '@chakra-ui/react'
+// import { useAuth } from 'components/contexts/auth-context'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../../app/api/auth-provider'
 

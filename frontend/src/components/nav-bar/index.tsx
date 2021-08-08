@@ -9,7 +9,7 @@ import {
 import NextLink from 'next/link'
 import React from 'react'
 // import { useAuth } from 'components/contexts/auth-context'
-// import useUser from 'shared/hooks/useUser'
+import useUser from 'shared/hooks/useUser'
 
 export default function WithSubnavigation() {
 	// const { logout } = useAuth()
@@ -31,8 +31,8 @@ export default function WithSubnavigation() {
 						<Link>Forums</Link>
 					</NextLink>
 				</HStack>
-				{/* <Text color='pinkle'>{user?.username}</Text>
-				<Button onClick={logout}>Logout</Button> */}
+				{/* <Text color='pinkle'>{user?.username}</Text> */}
+				<Button>Logout</Button>
 			</HStack>
 		</Box>
 	)
