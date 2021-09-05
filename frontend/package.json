@@ -6,7 +6,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"generate": "graphql-codegen --config codegen.ts"
+		"generate": "graphql-codegen --config codegen.js"
 	},
 	"dependencies": {
 		"@chakra-ui/icons": "^1.0.13",
