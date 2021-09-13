@@ -15,11 +15,15 @@ import {
 	InputLeftElement,
 	FormErrorMessage,
 } from '@chakra-ui/react'
+import { useSignupMutation } from 'generated'
+import { useRouter } from 'next/router'
 // import { useAuth } from 'components/contexts/auth-context'
 import { useForm } from 'react-hook-form'
 
 const Index = () => {
-	// const { signup } = useAuth()
+
+	const { push, query } = useRouter()
+	const { mutate: signupUser } = useSignupMutation()
 	const {
 		register,
 		handleSubmit,
@@ -28,10 +32,10 @@ const Index = () => {
 	} = useForm()
 
 	const onSubmit = async userCredentials => {
-		// signup(userCredentials, {
-		// 	onError: error => console.log(error),
-		// })
-	}
+		signupUser(userCredentials, {
+			onSuccess: () => push('/login')
+		})	
+	} 
 
 	return (
 		<SimpleGrid
@@ -68,7 +72,7 @@ const Index = () => {
 								<Input
 									id='firstName'
 									{...register('firstName', { required: 'First name is required' })}
-									placeholder='first name'
+									placeholder='First name'
 								/>
 							</InputGroup>
 							<FormErrorMessage>{errors?.firstName?.message}</FormErrorMessage>
@@ -80,26 +84,12 @@ const Index = () => {
 								<Input
 									id='lastName'
 									{...register('lastName', { required: 'Last name is required' })}
-									placeholder='last name'
+									placeholder='Last name'
 								/>
 							</InputGroup>
 							<FormErrorMessage>{errors?.lastName?.message}</FormErrorMessage>
 						</FormControl>
 					</HStack>
-
-					<FormControl isInvalid={errors.username}>
-						<InputGroup>
-							<InputLeftElement pointerEvents='none' />
-							<Input
-								id='username'
-								{...register('username', {
-									required: 'username is required',
-								})}
-								placeholder='username'
-							/>
-						</InputGroup>
-						<FormErrorMessage>{errors?.username?.message}</FormErrorMessage>
-					</FormControl>
 
 					<FormControl isInvalid={errors.email}>
 						<InputGroup>
@@ -108,7 +98,7 @@ const Index = () => {
 								id='email'
 								{...register('email', { required: 'Email is required' })}
 								type='email'
-								placeholder='email'
+								placeholder='Email'
 							/>
 						</InputGroup>
 						<FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
@@ -121,7 +111,7 @@ const Index = () => {
 								id='password'
 								{...register('password', { required: 'Password is required' })}
 								type='password'
-								placeholder='password'
+								placeholder='Password'
 							/>
 						</InputGroup>
 						<FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
@@ -137,7 +127,7 @@ const Index = () => {
 									required: 'Please verify password',
 								})}
 								type='password'
-								placeholder='confirm password'
+								placeholder='Confirm password'
 							/>
 						</InputGroup>
 						<FormErrorMessage>{errors?.confirmPassword?.message}</FormErrorMessage>

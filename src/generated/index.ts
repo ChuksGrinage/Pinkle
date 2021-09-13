@@ -85,7 +85,7 @@ export type MutationDeletePostArgs = {
 };
 
 export type MutationSignupUserArgs = {
-  input: UserCredentials;
+  input: SignupUserInput;
 };
 
 export type MutationVerifyTokenArgs = {
@@ -97,7 +97,7 @@ export type MutationRefreshTokenArgs = {
 };
 
 export type MutationTokenAuthArgs = {
-  username: Scalars["String"];
+  email: Scalars["String"];
   password: Scalars["String"];
 };
 
@@ -141,10 +141,25 @@ export type RevokeToken = {
   revoked?: Maybe<Scalars["Int"]>;
 };
 
+export type SignupUserInput = {
+  email: Scalars["String"];
+  password: Scalars["String"];
+  firstName?: Maybe<Scalars["String"]>;
+  lastName?: Maybe<Scalars["String"]>;
+  dateOfBirth?: Maybe<Scalars["DateTime"]>;
+  zipCode?: Maybe<Scalars["String"]>;
+  students?: Maybe<Array<Maybe<StudentInput>>>;
+};
+
 export type Student = {
   __typename?: "Student";
   teacher?: Maybe<User>;
-  dob?: Maybe<Scalars["DateTime"]>;
+  dateOfBirth?: Maybe<Scalars["DateTime"]>;
+  grade: Scalars["String"];
+};
+
+export type StudentInput = {
+  dateOfBirth?: Maybe<Scalars["DateTime"]>;
   grade: Scalars["String"];
 };
 
@@ -169,22 +184,13 @@ export type UpdatePostInput = {
 export type User = {
   __typename?: "User";
   id: Scalars["ID"];
-  username: Scalars["String"];
   firstName?: Maybe<Scalars["String"]>;
   lastName?: Maybe<Scalars["String"]>;
   email: Scalars["String"];
   dateJoined: Scalars["DateTime"];
-  dob?: Maybe<Scalars["DateTime"]>;
-  city?: Maybe<Scalars["String"]>;
-  state?: Maybe<Scalars["String"]>;
+  dateOfBirth?: Maybe<Scalars["DateTime"]>;
   zipCode?: Maybe<Scalars["String"]>;
   students?: Maybe<Array<Maybe<Student>>>;
-};
-
-export type UserCredentials = {
-  username: Scalars["String"];
-  email: Scalars["String"];
-  password: Scalars["String"];
 };
 
 export type VerifyToken = {
@@ -207,11 +213,17 @@ export type GetAllPostsQuery = { __typename?: "Query" } & {
 
 export type UserCredentialsFragment = { __typename?: "User" } & Pick<
   User,
-  "id" | "username" | "email"
+  | "id"
+  | "email"
+  | "firstName"
+  | "lastName"
+  | "dateOfBirth"
+  | "dateJoined"
+  | "zipCode"
 >;
 
 export type LoginMutationVariables = Exact<{
-  username: Scalars["String"];
+  email: Scalars["String"];
   password: Scalars["String"];
 }>;
 
@@ -223,11 +235,29 @@ export type LoginMutation = { __typename?: "Mutation" } & {
   >;
 };
 
+export type SignupMutationVariables = Exact<{
+  email: Scalars["String"];
+  password: Scalars["String"];
+  firstName?: Maybe<Scalars["String"]>;
+  lastName?: Maybe<Scalars["String"]>;
+  dateOfBirth?: Maybe<Scalars["DateTime"]>;
+  zipCode?: Maybe<Scalars["String"]>;
+  students?: Maybe<Array<Maybe<StudentInput>> | Maybe<StudentInput>>;
+}>;
+
+export type SignupMutation = { __typename?: "Mutation" } & {
+  signupUser: { __typename?: "User" } & UserCredentialsFragment;
+};
+
 export const UserCredentialsFragmentDoc = `
     fragment UserCredentials on User {
   id
-  username
   email
+  firstName
+  lastName
+  dateOfBirth
+  dateJoined
+  zipCode
 }
     `;
 export const GetAllPostsDocument = `
@@ -258,8 +288,8 @@ export const useGetAllPostsQuery = <TData = GetAllPostsQuery, TError = unknown>(
     options
   );
 export const LoginDocument = `
-    mutation Login($username: String!, $password: String!) {
-  tokenAuth(username: $username, password: $password) {
+    mutation Login($email: String!, $password: String!) {
+  tokenAuth(email: $email, password: $password) {
     token
     user {
       ...UserCredentials
@@ -279,6 +309,31 @@ export const useLoginMutation = <TError = unknown, TContext = unknown>(
     (variables?: LoginMutationVariables) =>
       fetcher<LoginMutation, LoginMutationVariables>(
         LoginDocument,
+        variables
+      )(),
+    options
+  );
+export const SignupDocument = `
+    mutation Signup($email: String!, $password: String!, $firstName: String, $lastName: String, $dateOfBirth: DateTime, $zipCode: String, $students: [StudentInput]) {
+  signupUser(
+    input: {email: $email, password: $password, firstName: $firstName, lastName: $lastName, dateOfBirth: $dateOfBirth, zipCode: $zipCode, students: $students}
+  ) {
+    ...UserCredentials
+  }
+}
+    ${UserCredentialsFragmentDoc}`;
+export const useSignupMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    SignupMutation,
+    TError,
+    SignupMutationVariables,
+    TContext
+  >
+) =>
+  useMutation<SignupMutation, TError, SignupMutationVariables, TContext>(
+    (variables?: SignupMutationVariables) =>
+      fetcher<SignupMutation, SignupMutationVariables>(
+        SignupDocument,
         variables
       )(),
     options
