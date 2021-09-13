@@ -46,18 +46,18 @@ const LoginForm = () => {
 						Enter the world's largest homeschooling communtiy!
 					</Text>
 				</Box>
-				<FormControl isInvalid={errors.username || errors.server}>
+				<FormControl isInvalid={errors.email || errors.server}>
 					<InputGroup>
 						<InputLeftElement pointerEvents='none' />
 						<Input
-							id='username'
-							{...register('username', {
-								required: 'username is required',
+							id='email'
+							{...register('email', {
+								required: 'email is required',
 							})}
-							placeholder='username'
+							placeholder='Email'
 						/>
 					</InputGroup>
-					<FormErrorMessage>{errors?.username?.message}</FormErrorMessage>
+					<FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
 				</FormControl>
 				<FormControl isInvalid={errors.password || errors.server}>
 					<InputGroup>
@@ -66,7 +66,7 @@ const LoginForm = () => {
 							id='password'
 							{...register('password', { required: 'password is required' })}
 							type='password'
-							placeholder='password'
+							placeholder='Password'
 						/>
 					</InputGroup>
 					<FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
