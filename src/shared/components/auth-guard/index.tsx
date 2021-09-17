@@ -1,4 +1,4 @@
-import { useAuth } from 'components/auth-provider'
+import { useAuth } from 'shared/components/auth-provider'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 

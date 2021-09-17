@@ -1,6 +1,6 @@
 import React, { useState, useContext, createContext } from 'react'
 import { useRouter } from 'next/router'
-import { useLoginMutation } from 'generated'
+import { useCurrentUserQuery, useLoginMutation } from 'generated'
 const REDIRECT_KEY = 'REDIRECT_KEY'
 
 const authContext = createContext(null)
@@ -17,6 +17,7 @@ function clearRedirect() {
 }
 const AUTH_TOKEN = 'AUTH_TOKEN'
 function AuthProvider({ children }) {
+	// const { data: { me } = {} } = useCurrentUserQuery()
 	const { push, query } = useRouter()
 	const {
 		mutate,

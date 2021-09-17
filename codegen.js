@@ -34,5 +34,5 @@ module.exports = {
 		},
 	},
 }
-
+// `JWT ${localStorage.getItem('AUTH_TOKEN')}`
 // https://hasura.io/learn/graphql/typescript-react-apollo/codegen/

@@ -1,9 +1,9 @@
 /* eslint-disable */
 import {
-  useQuery,
-  UseQueryOptions,
   useMutation,
   UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
 } from "react-query";
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -21,7 +21,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "TOKEN-HERE",
+        Authorization: localStorage.getItem('AUTH_TOKEN') ? `JWT ${localStorage.getItem('AUTH_TOKEN')}` : null,
       },
       body: JSON.stringify({ query, variables }),
     });
@@ -108,8 +108,6 @@ export type Post = {
   truncatedBody: Scalars["String"];
   body: Scalars["String"];
   grade?: Maybe<Scalars["String"]>;
-  city?: Maybe<Scalars["String"]>;
-  state?: Maybe<Scalars["String"]>;
   zipCode?: Maybe<Scalars["String"]>;
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
@@ -123,6 +121,7 @@ export type Query = {
   __typename?: "Query";
   posts: Array<Maybe<Post>>;
   post: Post;
+  me: User;
 };
 
 export type QueryPostArgs = {
@@ -198,19 +197,6 @@ export type VerifyToken = {
   payload?: Maybe<Scalars["GenericScalar"]>;
 };
 
-export type GetAllPostsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetAllPostsQuery = { __typename?: "Query" } & {
-  posts: Array<
-    Maybe<
-      { __typename?: "Post" } & Pick<
-        Post,
-        "id" | "title" | "body" | "truncatedBody" | "grade" | "createdAt"
-      > & { author: { __typename?: "User" } & UserCredentialsFragment }
-    >
-  >;
-};
-
 export type UserCredentialsFragment = { __typename?: "User" } & Pick<
   User,
   | "id"
@@ -249,6 +235,42 @@ export type SignupMutation = { __typename?: "Mutation" } & {
   signupUser: { __typename?: "User" } & UserCredentialsFragment;
 };
 
+export type CreatePostMutationVariables = Exact<{
+  title: Scalars["String"];
+  body: Scalars["String"];
+  grade?: Maybe<Scalars["String"]>;
+  zipCode?: Maybe<Scalars["String"]>;
+  ups?: Maybe<Scalars["Int"]>;
+  downs?: Maybe<Scalars["Int"]>;
+  score?: Maybe<Scalars["Int"]>;
+}>;
+
+export type CreatePostMutation = { __typename?: "Mutation" } & {
+  createPost: { __typename?: "Post" } & Pick<
+    Post,
+    "id" | "title" | "body" | "truncatedBody" | "createdAt" | "grade"
+  > & { author: { __typename?: "User" } & UserCredentialsFragment };
+};
+
+export type GetAllPostsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllPostsQuery = { __typename?: "Query" } & {
+  posts: Array<
+    Maybe<
+      { __typename?: "Post" } & Pick<
+        Post,
+        "id" | "title" | "body" | "truncatedBody" | "grade" | "createdAt"
+      > & { author: { __typename?: "User" } & UserCredentialsFragment }
+    >
+  >;
+};
+
+export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>;
+
+export type CurrentUserQuery = { __typename?: "Query" } & {
+  me: { __typename?: "User" } & UserCredentialsFragment;
+};
+
 export const UserCredentialsFragmentDoc = `
     fragment UserCredentials on User {
   id
@@ -260,33 +282,6 @@ export const UserCredentialsFragmentDoc = `
   zipCode
 }
     `;
-export const GetAllPostsDocument = `
-    query GetAllPosts {
-  posts {
-    id
-    title
-    body
-    truncatedBody
-    grade
-    createdAt
-    author {
-      ...UserCredentials
-    }
-  }
-}
-    ${UserCredentialsFragmentDoc}`;
-export const useGetAllPostsQuery = <TData = GetAllPostsQuery, TError = unknown>(
-  variables?: GetAllPostsQueryVariables,
-  options?: UseQueryOptions<GetAllPostsQuery, TError, TData>
-) =>
-  useQuery<GetAllPostsQuery, TError, TData>(
-    ["GetAllPosts", variables],
-    fetcher<GetAllPostsQuery, GetAllPostsQueryVariables>(
-      GetAllPostsDocument,
-      variables
-    ),
-    options
-  );
 export const LoginDocument = `
     mutation Login($email: String!, $password: String!) {
   tokenAuth(email: $email, password: $password) {
@@ -336,5 +331,89 @@ export const useSignupMutation = <TError = unknown, TContext = unknown>(
         SignupDocument,
         variables
       )(),
+    options
+  );
+export const CreatePostDocument = `
+    mutation CreatePost($title: String!, $body: String!, $grade: String, $zipCode: String, $ups: Int, $downs: Int, $score: Int) {
+  createPost(
+    input: {title: $title, body: $body, grade: $grade, zipCode: $zipCode, ups: $ups, downs: $downs, score: $score}
+  ) {
+    id
+    title
+    body
+    truncatedBody
+    createdAt
+    grade
+    author {
+      ...UserCredentials
+    }
+  }
+}
+    ${UserCredentialsFragmentDoc}`;
+export const useCreatePostMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    CreatePostMutation,
+    TError,
+    CreatePostMutationVariables,
+    TContext
+  >
+) =>
+  useMutation<
+    CreatePostMutation,
+    TError,
+    CreatePostMutationVariables,
+    TContext
+  >(
+    (variables?: CreatePostMutationVariables) =>
+      fetcher<CreatePostMutation, CreatePostMutationVariables>(
+        CreatePostDocument,
+        variables
+      )(),
+    options
+  );
+export const GetAllPostsDocument = `
+    query GetAllPosts {
+  posts {
+    id
+    title
+    body
+    truncatedBody
+    grade
+    createdAt
+    author {
+      ...UserCredentials
+    }
+  }
+}
+    ${UserCredentialsFragmentDoc}`;
+export const useGetAllPostsQuery = <TData = GetAllPostsQuery, TError = unknown>(
+  variables?: GetAllPostsQueryVariables,
+  options?: UseQueryOptions<GetAllPostsQuery, TError, TData>
+) =>
+  useQuery<GetAllPostsQuery, TError, TData>(
+    ["GetAllPosts", variables],
+    fetcher<GetAllPostsQuery, GetAllPostsQueryVariables>(
+      GetAllPostsDocument,
+      variables
+    ),
+    options
+  );
+export const CurrentUserDocument = `
+    query currentUser {
+  me {
+    ...UserCredentials
+  }
+}
+    ${UserCredentialsFragmentDoc}`;
+export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
+  variables?: CurrentUserQueryVariables,
+  options?: UseQueryOptions<CurrentUserQuery, TError, TData>
+) =>
+  useQuery<CurrentUserQuery, TError, TData>(
+    ["currentUser", variables],
+    fetcher<CurrentUserQuery, CurrentUserQueryVariables>(
+      CurrentUserDocument,
+      variables
+    ),
     options
   );

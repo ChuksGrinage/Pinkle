@@ -9,7 +9,7 @@ const Login = () => {
 			justifyItems='center'
 			backgroundColor='bg-cream'
 		>
-			<Heading alignSelf='end' fontFamily='novaMono' color='pinkle'>
+			<Heading alignSelf='end' fontFamily='novaMono' >
 				Pinkle
 			</Heading>
 			<LoginForm />

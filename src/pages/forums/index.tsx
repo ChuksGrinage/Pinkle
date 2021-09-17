@@ -13,7 +13,7 @@ import NextLink from 'next/link'
 import { useGetAllPostsQuery } from 'generated'
 import React from 'react'
 import { useRouter } from 'next/router'
-import { BlogCard, Pagination } from 'components'
+import { BlogCard, Pagination } from 'shared/components'
 
 const Forums = () => {
 	const { push, query: { page: urlCurrentPage } = {} } = useRouter()
@@ -41,12 +41,12 @@ const Forums = () => {
 				<GridItem colSpan={5}>
 					<HStack p='5'>
 						<Input placeholder='search' />
-						<Button colorScheme='pink' variant='outline'>
+						<Button ' variant='outline'>
 							Search
 						</Button>
 						<Button
 							onClick={() => push('/forums/create-post')}
-							colorScheme='pink'
+							'
 							variant='outline'
 						>
 							Create Post

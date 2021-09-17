@@ -25,7 +25,7 @@ const CreatePost = () => {
 	} = useForm()
 	const { mutate: createPost } = useCreatePostMutation({
 		onSuccess: post => {
-			console.log(post.createPost.id)
+			// console.log(post.createPost.id)
 			// push(`forums/${post.createPost.id}`)
 			// queryCache.invalidateQueries('GetAllPosts')
 			reset()
@@ -57,10 +57,10 @@ const CreatePost = () => {
 				<FormControl isInvalid={errors.content}>
 					<FormLabel htmlFor='content'>content</FormLabel>
 					<Textarea
-						id='content'
-						placeholder='content'
-						{...register('content', {
-							required: 'Content is required',
+						id='body'
+						placeholder='body'
+						{...register('body', {
+							required: 'body is required',
 						})}
 					/>
 					<FormErrorMessage>{errors?.content?.message}</FormErrorMessage>

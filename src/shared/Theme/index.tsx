@@ -9,11 +9,6 @@ import { extendTheme } from '@chakra-ui/react'
 // })
 
 const theme = extendTheme({
-	colors: {
-		black: '#16161D',
-		pinkle: '#ea4c89',
-		'bg-cream': '#FAF8F8',
-	},
 	fonts: {
 		// heading: 'Nova mono, monospace',ss
 		body: 'Lato, sans-serif',

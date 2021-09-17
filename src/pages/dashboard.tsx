@@ -15,8 +15,8 @@ import React, { useState, useRef } from 'react'
 import NextLink from 'next/link'
 import { useQueryClient } from 'react-query'
 // import { localStorageKey } from 'shared/contstants'
-// import { BlogCard } from 'components'
-// import { NavBar } from 'components'
+// import { BlogCard } from 'shared/components'
+// import { NavBar } from 'shared/components'
 
 // test2password
 // wimekos746@firmjam.com
@@ -108,7 +108,7 @@ const Dashboard = () => {
 								</Text>
 							</Flex>
 						) : (
-							<Flex borderLeft='solid 1px' borderColor='pinkle' paddingLeft='2'>
+							<Flex borderLeft='solid 1px' border paddingLeft='2'>
 								<Avatar
 									size='lg'
 									name={user.name}
@@ -117,7 +117,7 @@ const Dashboard = () => {
 								/>
 
 								<Stack>
-									<Heading color='pinkle' fontFamily='novaMono' as='h5' size='md'>
+									<Heading  fontFamily='novaMono' as='h5' size='md'>
 										Welcome back, {user.name}
 									</Heading>
 									<Text>Nice to see you!</Text>
@@ -131,7 +131,7 @@ const Dashboard = () => {
 						</NextLink>
 						<Link>Dashboard</Link>
 						<Link>Goals</Link>
-						<Button onClick={logout} size='sm' colorScheme='pink'>
+						<Button onClick={logout} size='sm' '>
 							Logout
 						</Button>
 					</HStack>

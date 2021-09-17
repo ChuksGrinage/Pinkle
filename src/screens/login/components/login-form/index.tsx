@@ -13,7 +13,7 @@ import {
 	Text,
 	Container,
 } from '@chakra-ui/react'
-import { useAuth } from 'components'
+import { useAuth } from 'shared/components'
 import { useForm } from 'react-hook-form'
 
 const LoginForm = () => {
@@ -42,7 +42,7 @@ const LoginForm = () => {
 					<Heading marginBottom='1rem' size='md' fontFamily='novaMono'>
 						Sign In
 					</Heading>
-					<Text color='pinkle' fontSize='sm'>
+					<Text  fontSize='sm'>
 						Enter the world's largest homeschooling communtiy!
 					</Text>
 				</Box>
@@ -71,7 +71,7 @@ const LoginForm = () => {
 					</InputGroup>
 					<FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
 				</FormControl>
-				<Link color='pinkle' alignSelf='flex-end'>
+				<Link  alignSelf='flex-end'>
 					Forget password?
 				</Link>
 
@@ -79,7 +79,6 @@ const LoginForm = () => {
 					borderRadius={20}
 					type='submit'
 					variant='solid'
-					colorScheme='pink'
 					width='full'
 					isLoading={isSubmitting}
 					loadingText='Submitting'
@@ -88,7 +87,7 @@ const LoginForm = () => {
 				</Button>
 				<Text>
 					Don't have an account?{' '}
-					<Link href='/signup' color='pinkle'>
+					<Link href='/signup' >
 						Sign up
 					</Link>
 				</Text>

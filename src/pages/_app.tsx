@@ -1,11 +1,11 @@
 import React from 'react'
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
-import theme from 'theme'
+import theme from 'shared/Theme'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import { AuthGuard, AuthProvider } from 'components'
+import { AuthGuard, AuthProvider } from 'shared/components'
 import { ReactQueryDevtools } from 'react-query/devtools'
 // https://github.com/EatEmAll/django-djeddit
-
+// https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/#refresh_token
 const queryClient = new QueryClient()
 
 function MyApp({ Component, pageProps }) {
@@ -14,8 +14,8 @@ function MyApp({ Component, pageProps }) {
 			<ChakraProvider resetCSS={true} theme={theme}>
 				<ColorModeProvider options={{ useSystemColorMode: true }}>
 					<AuthProvider>
-						{/* <NavBar /> */}
-						{Component.requireAuth ? (
+						{/* replace false with Component.requireAuth */}
+						{false? (
 							<AuthGuard>
 								<Component {...pageProps} />
 							</AuthGuard>

@@ -44,10 +44,10 @@ const Index = () => {
 			justifyItems='center'
 			backgroundColor='bg-cream'
 		>
-			<Heading alignSelf='end' fontFamily='novaMono' color='pinkle'>
+			<Heading alignSelf='end' fontFamily='novaMono' >
 				Pinkle
 			</Heading>
-			<form onSubmit={handleSubmit(onSubmit)}>
+			<Box as='form' onSubmit={handleSubmit(onSubmit)}>
 				<VStack
 					backgroundColor='white'
 					padding='3rem'
@@ -60,7 +60,7 @@ const Index = () => {
 						<Heading marginBottom='1rem' size='md' fontFamily='novaMono'>
 							Sign Up
 						</Heading>
-						<Text color='pinkle' fontSize='sm'>
+						<Text  fontSize='sm'>
 							Join the world's largest homeschooling communtiy!
 						</Text>
 					</Box>
@@ -136,7 +136,7 @@ const Index = () => {
 						borderRadius={20}
 						type='submit'
 						variant='solid'
-						colorScheme='pink'
+						'
 						width='full'
 						isLoading={isSubmitting}
 						loadingText='Submitting'
@@ -145,12 +145,12 @@ const Index = () => {
 					</Button>
 					<Text>
 						Already have an account?{' '}
-						<Link href='/login' color='pinkle'>
+						<Link href='/login' >
 							Log in
 						</Link>
 					</Text>
 				</VStack>
-			</form>
+			</Box>
 		</SimpleGrid>
 	)
 }
