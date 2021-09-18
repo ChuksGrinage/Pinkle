@@ -6,12 +6,12 @@ import React from 'react'
 
 const Post = () => {
 	const { query, push } = useRouter()
+	console.log({query})
 	const {
 		data: { post } = {},
 		isLoading,
 		isError,
-	} = useGetPostByIdQuery({ postId: query.id })
-
+	} = useGetPostByIdQuery({postId: query.id as string})
 	return (
 		<VStack>
 			<Button onClick={() => push('/forums')}>Go Back</Button>
@@ -22,7 +22,7 @@ const Post = () => {
 			) : (
 				<>
 					<Text>{post.title}</Text>
-					<Text>{post.content}</Text>
+					<Text>{post.body}</Text>
 				</>
 			)}
 		</VStack>

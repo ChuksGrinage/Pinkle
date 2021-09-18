@@ -41,14 +41,8 @@ const Forums = () => {
 				<GridItem colSpan={5}>
 					<HStack p='5'>
 						<Input placeholder='search' />
-						<Button ' variant='outline'>
-							Search
-						</Button>
-						<Button
-							onClick={() => push('/forums/create-post')}
-							'
-							variant='outline'
-						>
+						<Button variant='outline'>Search</Button>
+						<Button onClick={() => push('/forums/create-post')} variant='outline'>
 							Create Post
 						</Button>
 					</HStack>

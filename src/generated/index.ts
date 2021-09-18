@@ -21,7 +21,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: localStorage.getItem('AUTH_TOKEN') ? `JWT ${localStorage.getItem('AUTH_TOKEN')}` : null,
+        Authorization: `JWT ${localStorage.getItem('AUTH_TOKEN')}`,
       },
       body: JSON.stringify({ query, variables }),
     });
@@ -67,6 +67,7 @@ export type Mutation = {
   updatePost: Post;
   deletePost: Scalars["Boolean"];
   signupUser: User;
+  updateUser: User;
   verifyToken?: Maybe<VerifyToken>;
   refreshToken?: Maybe<RefreshToken>;
   tokenAuth?: Maybe<TokenAuth>;
@@ -86,6 +87,10 @@ export type MutationDeletePostArgs = {
 
 export type MutationSignupUserArgs = {
   input: SignupUserInput;
+};
+
+export type MutationUpdateUserArgs = {
+  input?: Maybe<UpdateUserInput>;
 };
 
 export type MutationVerifyTokenArgs = {
@@ -180,6 +185,15 @@ export type UpdatePostInput = {
   zipCode?: Maybe<Scalars["String"]>;
 };
 
+export type UpdateUserInput = {
+  email?: Maybe<Scalars["String"]>;
+  firstName?: Maybe<Scalars["String"]>;
+  lastName?: Maybe<Scalars["String"]>;
+  dateOfBirth?: Maybe<Scalars["DateTime"]>;
+  zipCode?: Maybe<Scalars["String"]>;
+  students?: Maybe<Array<Maybe<StudentInput>>>;
+};
+
 export type User = {
   __typename?: "User";
   id: Scalars["ID"];
@@ -195,6 +209,47 @@ export type User = {
 export type VerifyToken = {
   __typename?: "VerifyToken";
   payload?: Maybe<Scalars["GenericScalar"]>;
+};
+
+export type CreatePostMutationVariables = Exact<{
+  title: Scalars["String"];
+  body: Scalars["String"];
+  grade?: Maybe<Scalars["String"]>;
+  zipCode?: Maybe<Scalars["String"]>;
+  ups?: Maybe<Scalars["Int"]>;
+  downs?: Maybe<Scalars["Int"]>;
+  score?: Maybe<Scalars["Int"]>;
+}>;
+
+export type CreatePostMutation = { __typename?: "Mutation" } & {
+  createPost: { __typename?: "Post" } & Pick<
+    Post,
+    "id" | "title" | "body" | "truncatedBody" | "createdAt" | "grade"
+  > & { author: { __typename?: "User" } & UserCredentialsFragment };
+};
+
+export type GetAllPostsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllPostsQuery = { __typename?: "Query" } & {
+  posts: Array<
+    Maybe<
+      { __typename?: "Post" } & Pick<
+        Post,
+        "id" | "title" | "body" | "truncatedBody" | "grade" | "createdAt"
+      > & { author: { __typename?: "User" } & UserCredentialsFragment }
+    >
+  >;
+};
+
+export type GetPostByIdQueryVariables = Exact<{
+  postId: Scalars["String"];
+}>;
+
+export type GetPostByIdQuery = { __typename?: "Query" } & {
+  post: { __typename?: "Post" } & Pick<
+    Post,
+    "id" | "title" | "body" | "truncatedBody" | "grade" | "createdAt"
+  > & { author: { __typename?: "User" } & UserCredentialsFragment };
 };
 
 export type UserCredentialsFragment = { __typename?: "User" } & Pick<
@@ -235,36 +290,6 @@ export type SignupMutation = { __typename?: "Mutation" } & {
   signupUser: { __typename?: "User" } & UserCredentialsFragment;
 };
 
-export type CreatePostMutationVariables = Exact<{
-  title: Scalars["String"];
-  body: Scalars["String"];
-  grade?: Maybe<Scalars["String"]>;
-  zipCode?: Maybe<Scalars["String"]>;
-  ups?: Maybe<Scalars["Int"]>;
-  downs?: Maybe<Scalars["Int"]>;
-  score?: Maybe<Scalars["Int"]>;
-}>;
-
-export type CreatePostMutation = { __typename?: "Mutation" } & {
-  createPost: { __typename?: "Post" } & Pick<
-    Post,
-    "id" | "title" | "body" | "truncatedBody" | "createdAt" | "grade"
-  > & { author: { __typename?: "User" } & UserCredentialsFragment };
-};
-
-export type GetAllPostsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetAllPostsQuery = { __typename?: "Query" } & {
-  posts: Array<
-    Maybe<
-      { __typename?: "Post" } & Pick<
-        Post,
-        "id" | "title" | "body" | "truncatedBody" | "grade" | "createdAt"
-      > & { author: { __typename?: "User" } & UserCredentialsFragment }
-    >
-  >;
-};
-
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserQuery = { __typename?: "Query" } & {
@@ -282,57 +307,6 @@ export const UserCredentialsFragmentDoc = `
   zipCode
 }
     `;
-export const LoginDocument = `
-    mutation Login($email: String!, $password: String!) {
-  tokenAuth(email: $email, password: $password) {
-    token
-    user {
-      ...UserCredentials
-    }
-  }
-}
-    ${UserCredentialsFragmentDoc}`;
-export const useLoginMutation = <TError = unknown, TContext = unknown>(
-  options?: UseMutationOptions<
-    LoginMutation,
-    TError,
-    LoginMutationVariables,
-    TContext
-  >
-) =>
-  useMutation<LoginMutation, TError, LoginMutationVariables, TContext>(
-    (variables?: LoginMutationVariables) =>
-      fetcher<LoginMutation, LoginMutationVariables>(
-        LoginDocument,
-        variables
-      )(),
-    options
-  );
-export const SignupDocument = `
-    mutation Signup($email: String!, $password: String!, $firstName: String, $lastName: String, $dateOfBirth: DateTime, $zipCode: String, $students: [StudentInput]) {
-  signupUser(
-    input: {email: $email, password: $password, firstName: $firstName, lastName: $lastName, dateOfBirth: $dateOfBirth, zipCode: $zipCode, students: $students}
-  ) {
-    ...UserCredentials
-  }
-}
-    ${UserCredentialsFragmentDoc}`;
-export const useSignupMutation = <TError = unknown, TContext = unknown>(
-  options?: UseMutationOptions<
-    SignupMutation,
-    TError,
-    SignupMutationVariables,
-    TContext
-  >
-) =>
-  useMutation<SignupMutation, TError, SignupMutationVariables, TContext>(
-    (variables?: SignupMutationVariables) =>
-      fetcher<SignupMutation, SignupMutationVariables>(
-        SignupDocument,
-        variables
-      )(),
-    options
-  );
 export const CreatePostDocument = `
     mutation CreatePost($title: String!, $body: String!, $grade: String, $zipCode: String, $ups: Int, $downs: Int, $score: Int) {
   createPost(
@@ -396,6 +370,84 @@ export const useGetAllPostsQuery = <TData = GetAllPostsQuery, TError = unknown>(
       GetAllPostsDocument,
       variables
     ),
+    options
+  );
+export const GetPostByIdDocument = `
+    query GetPostById($postId: String!) {
+  post(postId: $postId) {
+    id
+    title
+    body
+    truncatedBody
+    grade
+    createdAt
+    author {
+      ...UserCredentials
+    }
+  }
+}
+    ${UserCredentialsFragmentDoc}`;
+export const useGetPostByIdQuery = <TData = GetPostByIdQuery, TError = unknown>(
+  variables: GetPostByIdQueryVariables,
+  options?: UseQueryOptions<GetPostByIdQuery, TError, TData>
+) =>
+  useQuery<GetPostByIdQuery, TError, TData>(
+    ["GetPostById", variables],
+    fetcher<GetPostByIdQuery, GetPostByIdQueryVariables>(
+      GetPostByIdDocument,
+      variables
+    ),
+    options
+  );
+export const LoginDocument = `
+    mutation Login($email: String!, $password: String!) {
+  tokenAuth(email: $email, password: $password) {
+    token
+    user {
+      ...UserCredentials
+    }
+  }
+}
+    ${UserCredentialsFragmentDoc}`;
+export const useLoginMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    LoginMutation,
+    TError,
+    LoginMutationVariables,
+    TContext
+  >
+) =>
+  useMutation<LoginMutation, TError, LoginMutationVariables, TContext>(
+    (variables?: LoginMutationVariables) =>
+      fetcher<LoginMutation, LoginMutationVariables>(
+        LoginDocument,
+        variables
+      )(),
+    options
+  );
+export const SignupDocument = `
+    mutation Signup($email: String!, $password: String!, $firstName: String, $lastName: String, $dateOfBirth: DateTime, $zipCode: String, $students: [StudentInput]) {
+  signupUser(
+    input: {email: $email, password: $password, firstName: $firstName, lastName: $lastName, dateOfBirth: $dateOfBirth, zipCode: $zipCode, students: $students}
+  ) {
+    ...UserCredentials
+  }
+}
+    ${UserCredentialsFragmentDoc}`;
+export const useSignupMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    SignupMutation,
+    TError,
+    SignupMutationVariables,
+    TContext
+  >
+) =>
+  useMutation<SignupMutation, TError, SignupMutationVariables, TContext>(
+    (variables?: SignupMutationVariables) =>
+      fetcher<SignupMutation, SignupMutationVariables>(
+        SignupDocument,
+        variables
+      )(),
     options
   );
 export const CurrentUserDocument = `
