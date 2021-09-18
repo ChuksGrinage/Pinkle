@@ -1,0 +1,13 @@
+mutation CreatePost($title: String!, $body: String!, $grade: String, $zipCode: String, $ups: Int, $downs: Int, $score: Int) {
+	createPost(input: {title: $title , body: $body, grade: $grade, zipCode: $zipCode, ups: $ups, downs: $downs, score: $score }) {
+		id
+		title
+		body
+		truncatedBody
+		createdAt
+		grade
+		author {
+			...UserCredentials
+		}
+	}
+}
