@@ -21,7 +21,7 @@ function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `JWT ${localStorage.getItem('AUTH_TOKEN')}`,
+        Authorization: localStorage.getItem('AUTH_TOKEN') ? `JWT ${localStorage.getItem('AUTH_TOKEN')}` : null,
       },
       body: JSON.stringify({ query, variables }),
     });
