@@ -5,6 +5,7 @@ import {
   useQuery,
   UseQueryOptions,
 } from "react-query";
+import { client } from "shared/utils";
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
@@ -13,30 +14,6 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]: Maybe<T[SubKey]> };
-
-function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
-  return async (): Promise<TData> => {
-    const res = await fetch("http://localhost:8000/graphql/", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem('AUTH_TOKEN') ? `JWT ${localStorage.getItem('AUTH_TOKEN')}` : null,
-      },
-      body: JSON.stringify({ query, variables }),
-    });
-
-    const json = await res.json();
-
-    if (json.errors) {
-      const { message } = json.errors[0];
-
-      throw new Error(message);
-    }
-
-    return json.data;
-  };
-}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -47,6 +24,17 @@ export type Scalars = {
   Date: any;
   DateTime: any;
   GenericScalar: any;
+};
+
+export type Comment = {
+  __typename?: "Comment";
+  body: Scalars["String"];
+  user: User;
+  createdAt: Scalars["Date"];
+};
+
+export type CommentInput = {
+  body: Scalars["String"];
 };
 
 export type CreatePostInput = {
@@ -67,6 +55,11 @@ export type Mutation = {
   updatePost: Post;
   deletePost: Scalars["Boolean"];
   signupUser: User;
+  toggleLike: Scalars["Boolean"];
+  addComment: Comment;
+  removeComment: Scalars["Boolean"];
+  updateComment: Comment;
+  togglePostFavorite: Scalars["Boolean"];
   updateUser: User;
   verifyToken?: Maybe<VerifyToken>;
   refreshToken?: Maybe<RefreshToken>;
@@ -74,11 +67,11 @@ export type Mutation = {
 };
 
 export type MutationCreatePostArgs = {
-  input: CreatePostInput;
+  createPostInput: CreatePostInput;
 };
 
 export type MutationUpdatePostArgs = {
-  input: UpdatePostInput;
+  updatePostInput: UpdatePostInput;
 };
 
 export type MutationDeletePostArgs = {
@@ -86,11 +79,32 @@ export type MutationDeletePostArgs = {
 };
 
 export type MutationSignupUserArgs = {
-  input: SignupUserInput;
+  signupUserInput: SignupUserInput;
+};
+
+export type MutationToggleLikeArgs = {
+  postId: Scalars["Int"];
+};
+
+export type MutationAddCommentArgs = {
+  commentInput?: Maybe<CommentInput>;
+  postId: Scalars["String"];
+};
+
+export type MutationRemoveCommentArgs = {
+  commentId: Scalars["Int"];
+};
+
+export type MutationUpdateCommentArgs = {
+  commentInput?: Maybe<CommentInput>;
+};
+
+export type MutationTogglePostFavoriteArgs = {
+  postId: Scalars["String"];
 };
 
 export type MutationUpdateUserArgs = {
-  input?: Maybe<UpdateUserInput>;
+  updateUserInput?: Maybe<UpdateUserInput>;
 };
 
 export type MutationVerifyTokenArgs = {
@@ -116,20 +130,28 @@ export type Post = {
   zipCode?: Maybe<Scalars["String"]>;
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
-  ups: Scalars["Int"];
-  downs: Scalars["Int"];
-  score: Scalars["Int"];
   author: User;
+};
+
+export type PostResult = {
+  __typename?: "PostResult";
+  post: Post;
+  comments?: Maybe<Array<Comment>>;
 };
 
 export type Query = {
   __typename?: "Query";
   posts: Array<Maybe<Post>>;
   post: Post;
+  comments: Array<Maybe<Comment>>;
   me: User;
 };
 
 export type QueryPostArgs = {
+  postId: Scalars["String"];
+};
+
+export type QueryCommentsArgs = {
   postId: Scalars["String"];
 };
 
@@ -204,6 +226,7 @@ export type User = {
   dateOfBirth?: Maybe<Scalars["DateTime"]>;
   zipCode?: Maybe<Scalars["String"]>;
   students?: Maybe<Array<Maybe<Student>>>;
+  posts?: Maybe<Array<Maybe<Post>>>;
 };
 
 export type VerifyToken = {
@@ -310,7 +333,7 @@ export const UserCredentialsFragmentDoc = `
 export const CreatePostDocument = `
     mutation CreatePost($title: String!, $body: String!, $grade: String, $zipCode: String, $ups: Int, $downs: Int, $score: Int) {
   createPost(
-    input: {title: $title, body: $body, grade: $grade, zipCode: $zipCode, ups: $ups, downs: $downs, score: $score}
+    createPostInput: {title: $title, body: $body, grade: $grade, zipCode: $zipCode, ups: $ups, downs: $downs, score: $score}
   ) {
     id
     title
@@ -339,7 +362,7 @@ export const useCreatePostMutation = <TError = unknown, TContext = unknown>(
     TContext
   >(
     (variables?: CreatePostMutationVariables) =>
-      fetcher<CreatePostMutation, CreatePostMutationVariables>(
+      client<CreatePostMutation, CreatePostMutationVariables>(
         CreatePostDocument,
         variables
       )(),
@@ -366,7 +389,7 @@ export const useGetAllPostsQuery = <TData = GetAllPostsQuery, TError = unknown>(
 ) =>
   useQuery<GetAllPostsQuery, TError, TData>(
     ["GetAllPosts", variables],
-    fetcher<GetAllPostsQuery, GetAllPostsQueryVariables>(
+    client<GetAllPostsQuery, GetAllPostsQueryVariables>(
       GetAllPostsDocument,
       variables
     ),
@@ -393,7 +416,7 @@ export const useGetPostByIdQuery = <TData = GetPostByIdQuery, TError = unknown>(
 ) =>
   useQuery<GetPostByIdQuery, TError, TData>(
     ["GetPostById", variables],
-    fetcher<GetPostByIdQuery, GetPostByIdQueryVariables>(
+    client<GetPostByIdQuery, GetPostByIdQueryVariables>(
       GetPostByIdDocument,
       variables
     ),
@@ -419,16 +442,13 @@ export const useLoginMutation = <TError = unknown, TContext = unknown>(
 ) =>
   useMutation<LoginMutation, TError, LoginMutationVariables, TContext>(
     (variables?: LoginMutationVariables) =>
-      fetcher<LoginMutation, LoginMutationVariables>(
-        LoginDocument,
-        variables
-      )(),
+      client<LoginMutation, LoginMutationVariables>(LoginDocument, variables)(),
     options
   );
 export const SignupDocument = `
     mutation Signup($email: String!, $password: String!, $firstName: String, $lastName: String, $dateOfBirth: DateTime, $zipCode: String, $students: [StudentInput]) {
   signupUser(
-    input: {email: $email, password: $password, firstName: $firstName, lastName: $lastName, dateOfBirth: $dateOfBirth, zipCode: $zipCode, students: $students}
+    signupUserInput: {email: $email, password: $password, firstName: $firstName, lastName: $lastName, dateOfBirth: $dateOfBirth, zipCode: $zipCode, students: $students}
   ) {
     ...UserCredentials
   }
@@ -444,7 +464,7 @@ export const useSignupMutation = <TError = unknown, TContext = unknown>(
 ) =>
   useMutation<SignupMutation, TError, SignupMutationVariables, TContext>(
     (variables?: SignupMutationVariables) =>
-      fetcher<SignupMutation, SignupMutationVariables>(
+      client<SignupMutation, SignupMutationVariables>(
         SignupDocument,
         variables
       )(),
@@ -463,7 +483,7 @@ export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
 ) =>
   useQuery<CurrentUserQuery, TError, TData>(
     ["currentUser", variables],
-    fetcher<CurrentUserQuery, CurrentUserQueryVariables>(
+    client<CurrentUserQuery, CurrentUserQueryVariables>(
       CurrentUserDocument,
       variables
     ),

@@ -21,14 +21,15 @@ module.exports = {
 			],
 			config: {
 				fetcher: {
-					endpoint: url,
-					fetchParams: {
-						credentials: 'include',
-						headers: {
-							"Content-Type": 'application/json',
-							'Authorization': 'TOKEN-HERE',
-						}
-					}
+					// endpoint: url,
+					func: 'shared/utils#client'
+					// fetchParams: {
+					// 	credentials: 'include',
+					// 	headers: {
+					// 		"Content-Type": 'application/json',
+					// 		'Authorization': 'TOKEN-HERE',
+					// 	}
+					// }
 				}
 			}
 		},
