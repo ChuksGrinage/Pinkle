@@ -21,8 +21,8 @@ module.exports = {
 			],
 			config: {
 				fetcher: {
-					// endpoint: url,
 					func: 'shared/utils#client'
+					// endpoint: url,
 					// fetchParams: {
 					// 	credentials: 'include',
 					// 	headers: {

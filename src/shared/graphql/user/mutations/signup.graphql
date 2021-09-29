@@ -1,13 +1,23 @@
 mutation Signup(
-	$email: String!,
-	$password: String!,
-	$firstName: String,
-	$lastName: String,
-	$dateOfBirth: DateTime,
-	$zipCode: String,
+	$email: String!
+	$password: String!
+	$firstName: String
+	$lastName: String
+	$dateOfBirth: DateTime
+	$zipCode: String
 	$students: [StudentInput]
 ) {
-	signupUser(input: {email: $email, password: $password, firstName: $firstName, lastName: $lastName dateOfBirth: $dateOfBirth, zipCode: $zipCode, students: $students}) {
+	signupUser(
+		signupUserInput: {
+			email: $email
+			password: $password
+			firstName: $firstName
+			lastName: $lastName
+			dateOfBirth: $dateOfBirth
+			zipCode: $zipCode
+			students: $students
+		}
+	) {
 		...UserCredentials
 	}
 }

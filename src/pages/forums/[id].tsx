@@ -1,20 +1,22 @@
 import { Button } from '@chakra-ui/button'
 import { VStack, Text } from '@chakra-ui/layout'
-import { useGetPostByIdQuery } from 'generated'
+import { useGetAllPostsQuery, useGetPostByIdQuery } from 'generated'
 import { useRouter } from 'next/router'
 import React from 'react'
 
 const Post = () => {
-	const { query, push } = useRouter()
-	console.log({query})
+	const { query, back } = useRouter()
+
+	console.log(query)
 	const {
 		data: { post } = {},
 		isLoading,
 		isError,
-	} = useGetPostByIdQuery({postId: query.id as string})
+	} = useGetPostByIdQuery({ postId: query.id as string })
+
 	return (
 		<VStack>
-			<Button onClick={() => push('/forums')}>Go Back</Button>
+			<Button onClick={() => back()}>Go Back</Button>
 			{isLoading ? (
 				<Text>...loading</Text>
 			) : isError ? (
@@ -28,5 +30,15 @@ const Post = () => {
 		</VStack>
 	)
 }
+
+// export async function getStaticPaths() {
+// 	const { data } = useGetAllPostsQuery()
+
+// 	return { posts: data }
+// }
+
+// export async function getStaticProps({ params }) {
+// 	console.log({ params })
+// }
 
 export default Post
