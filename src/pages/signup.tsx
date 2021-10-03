@@ -31,8 +31,8 @@ const Index = () => {
 		formState: { errors, isSubmitting },
 	} = useForm()
 
-	const onSubmit = async userCredentials => {
-		signupUser(userCredentials, {
+	const onSubmit = async userSignupData => {
+		signupUser(userSignupData, {
 			onSuccess: () => push('/login')
 		})	
 	} 

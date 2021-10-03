@@ -1,5 +1,5 @@
-query currentUser {
+query CurrentUser {
 	me {
-		...UserCredentials
+		...UserInfo
 	}
 }

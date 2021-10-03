@@ -1,4 +1,4 @@
-mutation Signup(
+mutation SignupUser(
 	$email: String!
 	$password: String!
 	$firstName: String
@@ -18,6 +18,6 @@ mutation Signup(
 			students: $students
 		}
 	) {
-		...UserCredentials
+		...UserInfo
 	}
 }

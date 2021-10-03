@@ -1,4 +1,4 @@
-fragment UserCredentials on User {
+fragment UserInfo on User {
 	id
 	email
 	firstName
@@ -12,7 +12,6 @@ input StudentInput {
 	dateOfBirth: DateTime
 	grade: String!
 }
-
 
 # input UserSignupInput {
 # 	email: String!,

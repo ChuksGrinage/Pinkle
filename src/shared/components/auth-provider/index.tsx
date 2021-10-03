@@ -1,36 +1,38 @@
 import React, { useState, useContext, createContext } from 'react'
 import { useRouter } from 'next/router'
-import { useCurrentUserQuery, useLoginMutation } from 'generated'
-const REDIRECT_KEY = 'REDIRECT_KEY'
+import { useCurrentUserQuery, useTokenAuthMutation } from 'generated'
+import { useQueryClient } from 'react-query'
+import { UserCredentials } from 'shared/types'
 
 const authContext = createContext(null)
 function setRedirect(redirect: string) {
-	window.sessionStorage.setItem(REDIRECT_KEY, redirect)
+	window.sessionStorage.setItem(process.env.REDIRECT_KEY, redirect)
 }
 
 function getRedirect(): string | null {
-	return window.sessionStorage.getItem(REDIRECT_KEY)
+	return window.sessionStorage.getItem(process.env.REDIRECT_KEY)
 }
 
 function clearRedirect() {
-	return window.sessionStorage.removeItem(REDIRECT_KEY)
+	return window.sessionStorage.getItem(process.env.REDIRECT_KEY)
 }
-const AUTH_TOKEN = 'AUTH_TOKEN'
 function AuthProvider({ children }) {
-	// const { data: { me } = {} } = useCurrentUserQuery()
-	const { push, query } = useRouter()
+	const queryClient = useQueryClient()
 	const {
-		mutate,
+		data: { me } = {},
+		isLoading,
 		isError,
 		isSuccess,
-		data: { tokenAuth } = {},
-		isLoading,
-	} = useLoginMutation()
+	} = useCurrentUserQuery(null, { retry: false })
+	const { push, query } = useRouter()
+	const { mutate } = useTokenAuthMutation()
 
-	const login = userCredentials => {
-		mutate(userCredentials, {
+	const login = (userLoginData: UserCredentials) => {
+		mutate(userLoginData, {
+			onSettled: () => localStorage.removeItem(process.env.ACCESS_TOKEN),
 			onSuccess: ({ tokenAuth }) => {
-				localStorage.setItem(AUTH_TOKEN, tokenAuth.token)
+				localStorage.setItem(process.env.ACCESS_TOKEN, tokenAuth.token)
+				queryClient.invalidateQueries('Me')
 				if (typeof query.next === 'string') {
 					push(query.next)
 				} else {
@@ -39,14 +41,13 @@ function AuthProvider({ children }) {
 				}
 			},
 			onError: () => {
-				localStorage.removeItem(AUTH_TOKEN)
 				push('/login')
 			},
 		})
 	}
 
 	const logout = () => {
-		localStorage.removeItem(AUTH_TOKEN)
+		localStorage.removeItem(process.env.ACCESS_TOKEN)
 		push('/login')
 	}
 
@@ -57,7 +58,7 @@ function AuthProvider({ children }) {
 				logout,
 				isError,
 				isSuccess,
-				user: tokenAuth?.user,
+				user: me,
 				isLoading,
 				setRedirect,
 				getRedirect,
@@ -77,3 +78,8 @@ const useAuth = () => {
 	return context
 }
 export { useAuth, AuthProvider }
+
+// TODO
+// https://github.com/ivandotv/nextjs-client-signin-logic
+// https://mahieyin-rahmun.medium.com/how-to-configure-social-authentication-in-a-next-js-next-auth-django-rest-framework-application-cb4c82be137
+// https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/#refresh_token_login

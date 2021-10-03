@@ -7,7 +7,7 @@ query GetPostById($postId: String!) {
 		grade
 		createdAt
 		author {
-			...UserCredentials
+			...UserInfo
 		}
 	}
 }

@@ -12,14 +12,14 @@ import {
 	Link,
 	Text,
 } from '@chakra-ui/react'
-import { useSignupMutation } from 'generated'
+import { useSignupUserMutation } from 'generated'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
 const Account = () => {
 	const { push } = useRouter()
-	const { mutate: signupUser } = useSignupMutation()
+	const { mutate: signupUser } = useSignupUserMutation()
 	const {
 		register,
 		handleSubmit,
@@ -27,8 +27,8 @@ const Account = () => {
 		formState: { errors, isSubmitting },
 	} = useForm()
 
-	const onSubmit = async userCredentials => {
-		signupUser(userCredentials, {
+	const onSubmit = async userSignupData => {
+		signupUser(userSignupData, {
 			onSuccess: () => push('/login'),
 		})
 	}
@@ -43,7 +43,7 @@ const Account = () => {
 				borderRadius='1rem'
 				width='30rem'
 			>
-							<HStack>
+				<HStack>
 					<FormControl isInvalid={errors.firstName}>
 						<InputGroup>
 							<InputLeftElement pointerEvents='none' />
@@ -92,7 +92,6 @@ const Account = () => {
 				>
 					Update
 				</Button>
-			
 			</VStack>
 		</Box>
 	)

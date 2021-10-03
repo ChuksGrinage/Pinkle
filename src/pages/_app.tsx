@@ -3,7 +3,7 @@ import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
-import theme from 'shared/Theme'
+import theme from 'shared/theme'
 import { AuthGuard, AuthProvider } from 'shared/components'
 import NavBar from 'shared/components/navBar/navBar'
 
@@ -16,18 +16,18 @@ function MyApp({ Component, pageProps }) {
 				<ColorModeProvider options={{ useSystemColorMode: true }}>
 					<AuthProvider>
 						{/* replace false with Component.requireAuth */}
-						{false? (
+						{Component.requireAuth ? (
 							<AuthGuard>
 								<>
-								<NavBar/>
-								<Component {...pageProps} />
+									<NavBar />
+									<Component {...pageProps} />
 								</>
 							</AuthGuard>
 						) : (
 							// public page
 							<>
-							<NavBar/>
-							<Component {...pageProps} />
+								<NavBar />
+								<Component {...pageProps} />
 							</>
 						)}
 						<ReactQueryDevtools initialIsOpen={false} />

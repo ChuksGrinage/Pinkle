@@ -24,8 +24,8 @@ const LoginForm = () => {
 		formState: { errors, isSubmitting },
 	} = useForm()
 
-	const onSubmit = async userCredentials => {
-		login(userCredentials)
+	const onSubmit = async userLoginData => {
+		login(userLoginData)
 	}
 
 	return (
@@ -42,7 +42,7 @@ const LoginForm = () => {
 					<Heading marginBottom='1rem' size='md' fontFamily='novaMono'>
 						Sign In
 					</Heading>
-					<Text  fontSize='sm'>
+					<Text fontSize='sm'>
 						Enter the world's largest homeschooling communtiy!
 					</Text>
 				</Box>
@@ -55,6 +55,7 @@ const LoginForm = () => {
 								required: 'email is required',
 							})}
 							placeholder='Email'
+							value='test1@email.com'
 						/>
 					</InputGroup>
 					<FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
@@ -67,13 +68,12 @@ const LoginForm = () => {
 							{...register('password', { required: 'password is required' })}
 							type='password'
 							placeholder='Password'
+							value='test1'
 						/>
 					</InputGroup>
 					<FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
 				</FormControl>
-				<Link  alignSelf='flex-end'>
-					Forget password?
-				</Link>
+				<Link alignSelf='flex-end'>Forget password?</Link>
 
 				<Button
 					borderRadius={20}
@@ -86,10 +86,7 @@ const LoginForm = () => {
 					Login
 				</Button>
 				<Text>
-					Don't have an account?{' '}
-					<Link href='/signup' >
-						Sign up
-					</Link>
+					Don't have an account? <Link href='/signup'>Sign up</Link>
 				</Text>
 			</VStack>
 		</Container>

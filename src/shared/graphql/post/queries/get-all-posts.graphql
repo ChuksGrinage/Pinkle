@@ -7,7 +7,7 @@ query GetAllPosts {
 		grade
 		createdAt
 		author {
-			...UserCredentials
+			...UserInfo
 		}
 	}
 }

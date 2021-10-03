@@ -144,7 +144,7 @@ export type Query = {
   posts: Array<Maybe<Post>>;
   post: Post;
   comments: Array<Maybe<Comment>>;
-  me: User;
+  me?: Maybe<User>;
 };
 
 export type QueryPostArgs = {
@@ -248,7 +248,7 @@ export type CreatePostMutation = { __typename?: "Mutation" } & {
   createPost: { __typename?: "Post" } & Pick<
     Post,
     "id" | "title" | "body" | "truncatedBody" | "createdAt" | "grade"
-  > & { author: { __typename?: "User" } & UserCredentialsFragment };
+  > & { author: { __typename?: "User" } & UserInfoFragment };
 };
 
 export type GetAllPostsQueryVariables = Exact<{ [key: string]: never }>;
@@ -259,7 +259,7 @@ export type GetAllPostsQuery = { __typename?: "Query" } & {
       { __typename?: "Post" } & Pick<
         Post,
         "id" | "title" | "body" | "truncatedBody" | "grade" | "createdAt"
-      > & { author: { __typename?: "User" } & UserCredentialsFragment }
+      > & { author: { __typename?: "User" } & UserInfoFragment }
     >
   >;
 };
@@ -272,10 +272,10 @@ export type GetPostByIdQuery = { __typename?: "Query" } & {
   post: { __typename?: "Post" } & Pick<
     Post,
     "id" | "title" | "body" | "truncatedBody" | "grade" | "createdAt"
-  > & { author: { __typename?: "User" } & UserCredentialsFragment };
+  > & { author: { __typename?: "User" } & UserInfoFragment };
 };
 
-export type UserCredentialsFragment = { __typename?: "User" } & Pick<
+export type UserInfoFragment = { __typename?: "User" } & Pick<
   User,
   | "id"
   | "email"
@@ -286,20 +286,7 @@ export type UserCredentialsFragment = { __typename?: "User" } & Pick<
   | "zipCode"
 >;
 
-export type LoginMutationVariables = Exact<{
-  email: Scalars["String"];
-  password: Scalars["String"];
-}>;
-
-export type LoginMutation = { __typename?: "Mutation" } & {
-  tokenAuth?: Maybe<
-    { __typename?: "TokenAuth" } & Pick<TokenAuth, "token"> & {
-        user?: Maybe<{ __typename?: "User" } & UserCredentialsFragment>;
-      }
-  >;
-};
-
-export type SignupMutationVariables = Exact<{
+export type SignupUserMutationVariables = Exact<{
   email: Scalars["String"];
   password: Scalars["String"];
   firstName?: Maybe<Scalars["String"]>;
@@ -309,18 +296,31 @@ export type SignupMutationVariables = Exact<{
   students?: Maybe<Array<Maybe<StudentInput>> | Maybe<StudentInput>>;
 }>;
 
-export type SignupMutation = { __typename?: "Mutation" } & {
-  signupUser: { __typename?: "User" } & UserCredentialsFragment;
+export type SignupUserMutation = { __typename?: "Mutation" } & {
+  signupUser: { __typename?: "User" } & UserInfoFragment;
+};
+
+export type TokenAuthMutationVariables = Exact<{
+  email: Scalars["String"];
+  password: Scalars["String"];
+}>;
+
+export type TokenAuthMutation = { __typename?: "Mutation" } & {
+  tokenAuth?: Maybe<
+    { __typename?: "TokenAuth" } & Pick<TokenAuth, "token"> & {
+        user?: Maybe<{ __typename?: "User" } & UserInfoFragment>;
+      }
+  >;
 };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CurrentUserQuery = { __typename?: "Query" } & {
-  me: { __typename?: "User" } & UserCredentialsFragment;
+  me?: Maybe<{ __typename?: "User" } & UserInfoFragment>;
 };
 
-export const UserCredentialsFragmentDoc = `
-    fragment UserCredentials on User {
+export const UserInfoFragmentDoc = `
+    fragment UserInfo on User {
   id
   email
   firstName
@@ -342,11 +342,11 @@ export const CreatePostDocument = `
     createdAt
     grade
     author {
-      ...UserCredentials
+      ...UserInfo
     }
   }
 }
-    ${UserCredentialsFragmentDoc}`;
+    ${UserInfoFragmentDoc}`;
 export const useCreatePostMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<
     CreatePostMutation,
@@ -378,11 +378,11 @@ export const GetAllPostsDocument = `
     grade
     createdAt
     author {
-      ...UserCredentials
+      ...UserInfo
     }
   }
 }
-    ${UserCredentialsFragmentDoc}`;
+    ${UserInfoFragmentDoc}`;
 export const useGetAllPostsQuery = <TData = GetAllPostsQuery, TError = unknown>(
   variables?: GetAllPostsQueryVariables,
   options?: UseQueryOptions<GetAllPostsQuery, TError, TData>
@@ -405,11 +405,11 @@ export const GetPostByIdDocument = `
     grade
     createdAt
     author {
-      ...UserCredentials
+      ...UserInfo
     }
   }
 }
-    ${UserCredentialsFragmentDoc}`;
+    ${UserInfoFragmentDoc}`;
 export const useGetPostByIdQuery = <TData = GetPostByIdQuery, TError = unknown>(
   variables: GetPostByIdQueryVariables,
   options?: UseQueryOptions<GetPostByIdQuery, TError, TData>
@@ -422,67 +422,75 @@ export const useGetPostByIdQuery = <TData = GetPostByIdQuery, TError = unknown>(
     ),
     options
   );
-export const LoginDocument = `
-    mutation Login($email: String!, $password: String!) {
-  tokenAuth(email: $email, password: $password) {
-    token
-    user {
-      ...UserCredentials
-    }
-  }
-}
-    ${UserCredentialsFragmentDoc}`;
-export const useLoginMutation = <TError = unknown, TContext = unknown>(
-  options?: UseMutationOptions<
-    LoginMutation,
-    TError,
-    LoginMutationVariables,
-    TContext
-  >
-) =>
-  useMutation<LoginMutation, TError, LoginMutationVariables, TContext>(
-    (variables?: LoginMutationVariables) =>
-      client<LoginMutation, LoginMutationVariables>(LoginDocument, variables)(),
-    options
-  );
-export const SignupDocument = `
-    mutation Signup($email: String!, $password: String!, $firstName: String, $lastName: String, $dateOfBirth: DateTime, $zipCode: String, $students: [StudentInput]) {
+export const SignupUserDocument = `
+    mutation SignupUser($email: String!, $password: String!, $firstName: String, $lastName: String, $dateOfBirth: DateTime, $zipCode: String, $students: [StudentInput]) {
   signupUser(
     signupUserInput: {email: $email, password: $password, firstName: $firstName, lastName: $lastName, dateOfBirth: $dateOfBirth, zipCode: $zipCode, students: $students}
   ) {
-    ...UserCredentials
+    ...UserInfo
   }
 }
-    ${UserCredentialsFragmentDoc}`;
-export const useSignupMutation = <TError = unknown, TContext = unknown>(
+    ${UserInfoFragmentDoc}`;
+export const useSignupUserMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<
-    SignupMutation,
+    SignupUserMutation,
     TError,
-    SignupMutationVariables,
+    SignupUserMutationVariables,
     TContext
   >
 ) =>
-  useMutation<SignupMutation, TError, SignupMutationVariables, TContext>(
-    (variables?: SignupMutationVariables) =>
-      client<SignupMutation, SignupMutationVariables>(
-        SignupDocument,
+  useMutation<
+    SignupUserMutation,
+    TError,
+    SignupUserMutationVariables,
+    TContext
+  >(
+    (variables?: SignupUserMutationVariables) =>
+      client<SignupUserMutation, SignupUserMutationVariables>(
+        SignupUserDocument,
+        variables
+      )(),
+    options
+  );
+export const TokenAuthDocument = `
+    mutation TokenAuth($email: String!, $password: String!) {
+  tokenAuth(email: $email, password: $password) {
+    token
+    user {
+      ...UserInfo
+    }
+  }
+}
+    ${UserInfoFragmentDoc}`;
+export const useTokenAuthMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    TokenAuthMutation,
+    TError,
+    TokenAuthMutationVariables,
+    TContext
+  >
+) =>
+  useMutation<TokenAuthMutation, TError, TokenAuthMutationVariables, TContext>(
+    (variables?: TokenAuthMutationVariables) =>
+      client<TokenAuthMutation, TokenAuthMutationVariables>(
+        TokenAuthDocument,
         variables
       )(),
     options
   );
 export const CurrentUserDocument = `
-    query currentUser {
+    query CurrentUser {
   me {
-    ...UserCredentials
+    ...UserInfo
   }
 }
-    ${UserCredentialsFragmentDoc}`;
+    ${UserInfoFragmentDoc}`;
 export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
   variables?: CurrentUserQueryVariables,
   options?: UseQueryOptions<CurrentUserQuery, TError, TData>
 ) =>
   useQuery<CurrentUserQuery, TError, TData>(
-    ["currentUser", variables],
+    ["CurrentUser", variables],
     client<CurrentUserQuery, CurrentUserQueryVariables>(
       CurrentUserDocument,
       variables

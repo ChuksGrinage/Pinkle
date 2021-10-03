@@ -7,6 +7,8 @@ module.exports = {
 		return config
 	},
 	env: {
-		NEXT_PUBLIC_API_URL: 'http://localhost:8000/graphql/'
+		NEXT_PUBLIC_API_URL: 'http://localhost:8000/graphql/',
+		REDIRECT_KEY: 'REDIRECT_KEY',
+		ACCESS_TOKEN: 'ACCESS_TOKEN'
 	}
 }
