@@ -55,7 +55,7 @@ const LoginForm = () => {
 								required: 'email is required',
 							})}
 							placeholder='Email'
-							value='test1@email.com'
+							defaultValue='test1@email.com'
 						/>
 					</InputGroup>
 					<FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
@@ -68,7 +68,7 @@ const LoginForm = () => {
 							{...register('password', { required: 'password is required' })}
 							type='password'
 							placeholder='Password'
-							value='test1'
+							defaultValue='test1'
 						/>
 					</InputGroup>
 					<FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
