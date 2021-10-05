@@ -73,14 +73,4 @@ const Index = () => {
 	)
 }
 
-// export async function getStaticPaths() {
-// 	const { data } = useGetAllPostsQuery()
-
-// 	return { posts: data }
-// }
-
-// export async function getStaticProps({ params }) {
-// 	console.log({ params })
-// }
-
 export default Index

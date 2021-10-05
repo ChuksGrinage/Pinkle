@@ -17,7 +17,6 @@ import {
 } from '@chakra-ui/react'
 import { useSignupUserMutation } from 'generated'
 import { useRouter } from 'next/router'
-// import { useAuth } from 'components/contexts/auth-context'
 import { useForm } from 'react-hook-form'
 
 const Index = () => {

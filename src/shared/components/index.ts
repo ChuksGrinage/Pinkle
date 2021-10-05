@@ -1,5 +1,5 @@
 export { default as NavBar } from './nav-bar'
-export { default as BlogCard } from './blog-card'
+export { default as PostCard } from './post-card'
 export { default as Pagination } from './pagination'
 export { default as AuthGuard } from './auth-guard'
 export * from './auth-provider'

@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 
 import theme from 'shared/theme'
 import { AuthGuard, AuthProvider } from 'shared/components'
-import NavBar from 'shared/components/navBar/navBar'
+import NavBar from 'shared/components/nav-bar'
 
 const queryClient = new QueryClient()
 

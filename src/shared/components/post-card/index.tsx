@@ -35,7 +35,7 @@ export default function PostPreview({
 				<Text fontSize='lg'>{name}</Text>
 			</HStack>
 			<Text fontSize='xl'>
-				<NexLink href='/forums/[id]' as={`/forums/${id}`}>
+				<NexLink href='/post/[id]' as={`/post/${id}`}>
 					<Link>{title}</Link>
 				</NexLink>
 			</Text>
