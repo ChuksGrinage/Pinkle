@@ -28,6 +28,7 @@ export type Scalars = {
 
 export type Comment = {
   __typename?: "Comment";
+  id: Scalars["String"];
   body: Scalars["String"];
   user: User;
   createdAt: Scalars["Date"];
@@ -234,6 +235,33 @@ export type VerifyToken = {
   payload?: Maybe<Scalars["GenericScalar"]>;
 };
 
+export type AddCommentMutationVariables = Exact<{
+  body: Scalars["String"];
+  postId: Scalars["String"];
+}>;
+
+export type AddCommentMutation = { __typename?: "Mutation" } & {
+  addComment: { __typename?: "Comment" } & Pick<
+    Comment,
+    "id" | "body" | "createdAt"
+  > & { user: { __typename?: "User" } & UserInfoFragment };
+};
+
+export type GetCommentsByPostIdQueryVariables = Exact<{
+  postId: Scalars["String"];
+}>;
+
+export type GetCommentsByPostIdQuery = { __typename?: "Query" } & {
+  comments: Array<
+    Maybe<
+      { __typename?: "Comment" } & Pick<
+        Comment,
+        "id" | "body" | "createdAt"
+      > & { user: { __typename?: "User" } & Pick<User, "email" | "id"> }
+    >
+  >;
+};
+
 export type CreatePostMutationVariables = Exact<{
   title: Scalars["String"];
   body: Scalars["String"];
@@ -330,6 +358,71 @@ export const UserInfoFragmentDoc = `
   zipCode
 }
     `;
+export const AddCommentDocument = `
+    mutation AddComment($body: String!, $postId: String!) {
+  addComment(commentInput: {body: $body}, postId: $postId) {
+    id
+    body
+    createdAt
+    user {
+      ...UserInfo
+    }
+  }
+}
+    ${UserInfoFragmentDoc}`;
+export const useAddCommentMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    AddCommentMutation,
+    TError,
+    AddCommentMutationVariables,
+    TContext
+  >
+) =>
+  useMutation<
+    AddCommentMutation,
+    TError,
+    AddCommentMutationVariables,
+    TContext
+  >(
+    (variables?: AddCommentMutationVariables) =>
+      client<AddCommentMutation, AddCommentMutationVariables>(
+        AddCommentDocument,
+        variables
+      )(),
+    options
+  );
+export const GetCommentsByPostIdDocument = `
+    query GetCommentsByPostId($postId: String!) {
+  comments(postId: $postId) {
+    user {
+      email
+      id
+    }
+    id
+    body
+    createdAt
+    user {
+      id
+      email
+    }
+  }
+}
+    `;
+export const useGetCommentsByPostIdQuery = <
+  TData = GetCommentsByPostIdQuery,
+  TError = unknown
+>(
+  variables: GetCommentsByPostIdQueryVariables,
+  options?: UseQueryOptions<GetCommentsByPostIdQuery, TError, TData>
+) =>
+  useQuery<GetCommentsByPostIdQuery, TError, TData>(
+    ["GetCommentsByPostId", variables],
+    client<GetCommentsByPostIdQuery, GetCommentsByPostIdQueryVariables>(
+      GetCommentsByPostIdDocument,
+      variables
+    ),
+    options
+  );
 export const CreatePostDocument = `
     mutation CreatePost($title: String!, $body: String!, $grade: String, $zipCode: String, $ups: Int, $downs: Int, $score: Int) {
   createPost(

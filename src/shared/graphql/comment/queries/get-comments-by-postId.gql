@@ -1,0 +1,14 @@
+query GetCommentsByPostId($postId: String!) {
+	comments(postId: $postId) {
+		user {
+			email
+		}
+		id
+		body
+		createdAt
+		user {
+			id
+			email
+		}
+	}
+}

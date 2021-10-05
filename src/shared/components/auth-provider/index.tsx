@@ -23,13 +23,12 @@ function AuthProvider({ children }) {
 		isLoading,
 		isError,
 		isSuccess,
-	} = useCurrentUserQuery(null, { retry: false })
-	const { push, query } = useRouter()
+	} = useCurrentUserQuery()
+	const { push, query, route } = useRouter()
 	const { mutate } = useTokenAuthMutation()
 
 	const login = (userLoginData: UserCredentials) => {
 		mutate(userLoginData, {
-			onSettled: () => localStorage.removeItem(process.env.ACCESS_TOKEN),
 			onSuccess: ({ tokenAuth }) => {
 				localStorage.setItem(process.env.ACCESS_TOKEN, tokenAuth.token)
 				queryClient.invalidateQueries('Me')

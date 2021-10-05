@@ -1,5 +1,6 @@
-import { useAuth } from 'shared/components/auth-provider'
 import { useRouter } from 'next/router'
+import { useAuth } from 'shared/components/auth-provider'
+// import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 export default function AuthGuard({ children }: { children: JSX.Element }) {

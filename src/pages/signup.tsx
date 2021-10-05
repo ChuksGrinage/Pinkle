@@ -15,15 +15,14 @@ import {
 	InputLeftElement,
 	FormErrorMessage,
 } from '@chakra-ui/react'
-import { useSignupMutation } from 'generated'
+import { useSignupUserMutation } from 'generated'
 import { useRouter } from 'next/router'
 // import { useAuth } from 'components/contexts/auth-context'
 import { useForm } from 'react-hook-form'
 
 const Index = () => {
-
 	const { push, query } = useRouter()
-	const { mutate: signupUser } = useSignupMutation()
+	const { mutate: signupUser } = useSignupUserMutation()
 	const {
 		register,
 		handleSubmit,
@@ -33,9 +32,9 @@ const Index = () => {
 
 	const onSubmit = async userSignupData => {
 		signupUser(userSignupData, {
-			onSuccess: () => push('/login')
-		})	
-	} 
+			onSuccess: () => push('/login'),
+		})
+	}
 
 	return (
 		<SimpleGrid
@@ -44,7 +43,7 @@ const Index = () => {
 			justifyItems='center'
 			backgroundColor='bg-cream'
 		>
-			<Heading alignSelf='end' fontFamily='novaMono' >
+			<Heading alignSelf='end' fontFamily='novaMono'>
 				Pinkle
 			</Heading>
 			<Box as='form' onSubmit={handleSubmit(onSubmit)}>
@@ -60,7 +59,7 @@ const Index = () => {
 						<Heading marginBottom='1rem' size='md' fontFamily='novaMono'>
 							Sign Up
 						</Heading>
-						<Text  fontSize='sm'>
+						<Text fontSize='sm'>
 							Join the world's largest homeschooling communtiy!
 						</Text>
 					</Box>
@@ -136,7 +135,6 @@ const Index = () => {
 						borderRadius={20}
 						type='submit'
 						variant='solid'
-						'
 						width='full'
 						isLoading={isSubmitting}
 						loadingText='Submitting'
@@ -144,10 +142,7 @@ const Index = () => {
 						Sign Up
 					</Button>
 					<Text>
-						Already have an account?{' '}
-						<Link href='/login' >
-							Log in
-						</Link>
+						Already have an account? <Link href='/login'>Log in</Link>
 					</Text>
 				</VStack>
 			</Box>

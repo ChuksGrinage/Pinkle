@@ -20,6 +20,7 @@ function MyApp({ Component, pageProps }) {
 							<AuthGuard>
 								<>
 									<NavBar />
+									{/* TODO: Do we need two NavBar and Components? hmmm */}
 									<Component {...pageProps} />
 								</>
 							</AuthGuard>
