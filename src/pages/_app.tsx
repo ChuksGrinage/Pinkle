@@ -6,8 +6,8 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 
 import theme from 'shared/theme'
 import { AuthGuard, AuthProvider } from 'shared/components'
-import NavBar from 'shared/components/nav-bar'
 import { NextPage } from 'next'
+import { MainLayout } from 'shared/components/layouts'
 
 const queryClient = new QueryClient()
 
@@ -25,22 +25,18 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
       <ChakraProvider resetCSS={true} theme={theme}>
         <ColorModeProvider options={{ useSystemColorMode: true }}>
           <AuthProvider>
-            {/* replace false with Component.requireAuth */}
-            {Component.requireAuth ? (
-              <AuthGuard>
-                <>
-                  <NavBar />
+            <MainLayout>
+              {/* replace false with Component.requireAuth */}
+              {Component.requireAuth ? (
+                <AuthGuard>
                   {/* TODO: Do we need two NavBar and Components? hmmm */}
                   <Component {...pageProps} />
-                </>
-              </AuthGuard>
-            ) : (
-              // public page
-              <>
-                <NavBar />
+                </AuthGuard>
+              ) : (
+                // public page
                 <Component {...pageProps} />
-              </>
-            )}
+              )}
+            </MainLayout>
             <ReactQueryDevtools initialIsOpen={false} />
           </AuthProvider>
         </ColorModeProvider>

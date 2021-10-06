@@ -28,39 +28,34 @@ const Index = () => {
   }
 
   return (
-    <SimpleGrid
-      height="100vh"
-      justifyContent="center"
-      justifyItems="center"
-      backgroundColor="bg-cream"
-    >
-      <Heading alignSelf="end" fontFamily="novaMono">
+    <SimpleGrid justifyContent='center' justifyItems='center'>
+      <Heading alignSelf='end' fontFamily='novaMono'>
         Pinkle
       </Heading>
-      <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+      <Box as='form' onSubmit={handleSubmit(onSubmit)}>
         <VStack
-          backgroundColor="white"
-          padding="3rem"
-          marginTop="2rem"
-          spacing="4"
-          borderRadius="1rem"
-          width="30rem"
+          backgroundColor='white'
+          padding='3rem'
+          marginTop='2rem'
+          spacing='4'
+          borderRadius='1rem'
+          width='30rem'
         >
           <Box>
-            <Heading marginBottom="1rem" size="md" fontFamily="novaMono">
+            <Heading marginBottom='1rem' size='md' fontFamily='novaMono'>
               Sign Up
             </Heading>
-            <Text fontSize="sm">Join the world's largest homeschooling communtiy!</Text>
+            <Text fontSize='sm'>Join the world's largest homeschooling communtiy!</Text>
           </Box>
 
           <HStack>
             <FormControl isInvalid={errors.firstName}>
               <InputGroup>
-                <InputLeftElement pointerEvents="none" />
+                <InputLeftElement pointerEvents='none' />
                 <Input
-                  id="firstName"
+                  id='firstName'
                   {...register('firstName', { required: 'First name is required' })}
-                  placeholder="First name"
+                  placeholder='First name'
                 />
               </InputGroup>
               <FormErrorMessage>{errors?.firstName?.message}</FormErrorMessage>
@@ -68,11 +63,11 @@ const Index = () => {
 
             <FormControl isInvalid={errors.lastName}>
               <InputGroup>
-                <InputLeftElement pointerEvents="none" />
+                <InputLeftElement pointerEvents='none' />
                 <Input
-                  id="lastName"
+                  id='lastName'
                   {...register('lastName', { required: 'Last name is required' })}
-                  placeholder="Last name"
+                  placeholder='Last name'
                 />
               </InputGroup>
               <FormErrorMessage>{errors?.lastName?.message}</FormErrorMessage>
@@ -81,12 +76,12 @@ const Index = () => {
 
           <FormControl isInvalid={errors.email}>
             <InputGroup>
-              <InputLeftElement pointerEvents="none" />
+              <InputLeftElement pointerEvents='none' />
               <Input
-                id="email"
+                id='email'
                 {...register('email', { required: 'Email is required' })}
-                type="email"
-                placeholder="Email"
+                type='email'
+                placeholder='Email'
               />
             </InputGroup>
             <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
@@ -94,43 +89,43 @@ const Index = () => {
 
           <FormControl isInvalid={errors.password}>
             <InputGroup>
-              <InputLeftElement pointerEvents="none" />
+              <InputLeftElement pointerEvents='none' />
               <Input
-                id="password"
+                id='password'
                 {...register('password', { required: 'Password is required' })}
-                type="password"
-                placeholder="Password"
+                type='password'
+                placeholder='Password'
               />
             </InputGroup>
             <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
           </FormControl>
           <FormControl isInvalid={errors.confirmPassword}>
             <InputGroup>
-              <InputLeftElement pointerEvents="none" />
+              <InputLeftElement pointerEvents='none' />
               <Input
-                id="confirmPassword"
+                id='confirmPassword'
                 {...register('confirmPassword', {
                   validate: (value) => value === watch('password') || 'Passwords do not match',
                   required: 'Please verify password',
                 })}
-                type="password"
-                placeholder="Confirm password"
+                type='password'
+                placeholder='Confirm password'
               />
             </InputGroup>
             <FormErrorMessage>{errors?.confirmPassword?.message}</FormErrorMessage>
           </FormControl>
           <Button
             borderRadius={20}
-            type="submit"
-            variant="solid"
-            width="full"
+            type='submit'
+            variant='solid'
+            width='full'
             isLoading={isSubmitting}
-            loadingText="Submitting"
+            loadingText='Submitting'
           >
             Sign Up
           </Button>
           <Text>
-            Already have an account? <Link href="/login">Log in</Link>
+            Already have an account? <Link href='/login'>Log in</Link>
           </Text>
         </VStack>
       </Box>

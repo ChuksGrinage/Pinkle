@@ -1,20 +1,16 @@
-import { Heading, SimpleGrid } from '@chakra-ui/layout'
+import { Heading, Box } from '@chakra-ui/layout'
+import React from 'react'
 import { LoginForm } from 'screens/login/components'
 
 const Login = () => {
-	return (
-		<SimpleGrid
-			height='100vh'
-			justifyContent='center'
-			justifyItems='center'
-			backgroundColor='bg-cream'
-		>
-			<Heading alignSelf='end' fontFamily='novaMono' >
-				Pinkle
-			</Heading>
-			<LoginForm />
-		</SimpleGrid>
-	)
+  return (
+    <Box>
+      <Heading alignSelf='end' fontFamily='novaMono'>
+        Pinkle
+      </Heading>
+      <LoginForm />
+    </Box>
+  )
 }
 
 export default Login

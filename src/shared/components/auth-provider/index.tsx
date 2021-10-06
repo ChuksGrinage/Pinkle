@@ -22,7 +22,7 @@ type AuthProviderProps = {
 }
 function AuthProvider({ children }: AuthProviderProps) {
   const queryClient = useQueryClient()
-  const { data: { me } = {}, isLoading, isError, isSuccess } = useCurrentUserQuery()
+  const { data: { me = null } = {}, isLoading, isError, isSuccess } = useCurrentUserQuery()
   const { push, query } = useRouter()
   const { mutate } = useTokenAuthMutation()
 
@@ -46,9 +46,10 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = () => {
     localStorage.removeItem(process.env.ACCESS_TOKEN)
+    // TODO: I dont know if we should be clearing the whole thing
+    queryClient.clear()
     push('/login')
   }
-
   return (
     <authContext.Provider
       value={{
