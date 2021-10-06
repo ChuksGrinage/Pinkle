@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from 'react'
+import React, { useContext, createContext, ReactNode } from 'react'
 import { useRouter } from 'next/router'
 import { useCurrentUserQuery, useTokenAuthMutation } from 'generated'
 import { useQueryClient } from 'react-query'
@@ -6,75 +6,74 @@ import { UserCredentials } from 'shared/types'
 
 const authContext = createContext(null)
 function setRedirect(redirect: string) {
-	window.sessionStorage.setItem(process.env.REDIRECT_KEY, redirect)
+  window.sessionStorage.setItem(process.env.REDIRECT_KEY, redirect)
 }
 
 function getRedirect(): string | null {
-	return window.sessionStorage.getItem(process.env.REDIRECT_KEY)
+  return window.sessionStorage.getItem(process.env.REDIRECT_KEY)
 }
 
 function clearRedirect() {
-	return window.sessionStorage.getItem(process.env.REDIRECT_KEY)
+  return window.sessionStorage.getItem(process.env.REDIRECT_KEY)
 }
-function AuthProvider({ children }) {
-	const queryClient = useQueryClient()
-	const {
-		data: { me } = {},
-		isLoading,
-		isError,
-		isSuccess,
-	} = useCurrentUserQuery()
-	const { push, query, route } = useRouter()
-	const { mutate } = useTokenAuthMutation()
 
-	const login = (userLoginData: UserCredentials) => {
-		mutate(userLoginData, {
-			onSuccess: ({ tokenAuth }) => {
-				localStorage.setItem(process.env.ACCESS_TOKEN, tokenAuth.token)
-				queryClient.invalidateQueries('Me')
-				if (typeof query.next === 'string') {
-					push(query.next)
-				} else {
-					// worked
-					push('/')
-				}
-			},
-			onError: () => {
-				push('/login')
-			},
-		})
-	}
+type AuthProviderProps = {
+  children: ReactNode
+}
+function AuthProvider({ children }: AuthProviderProps) {
+  const queryClient = useQueryClient()
+  const { data: { me } = {}, isLoading, isError, isSuccess } = useCurrentUserQuery()
+  const { push, query } = useRouter()
+  const { mutate } = useTokenAuthMutation()
 
-	const logout = () => {
-		localStorage.removeItem(process.env.ACCESS_TOKEN)
-		push('/login')
-	}
+  const login = (userLoginData: UserCredentials) => {
+    mutate(userLoginData, {
+      onSuccess: ({ tokenAuth }) => {
+        localStorage.setItem(process.env.ACCESS_TOKEN, tokenAuth.token)
+        queryClient.invalidateQueries('Me')
+        if (typeof query.next === 'string') {
+          push(query.next)
+        } else {
+          // worked
+          push('/')
+        }
+      },
+      onError: () => {
+        push('/login')
+      },
+    })
+  }
 
-	return (
-		<authContext.Provider
-			value={{
-				login,
-				logout,
-				isError,
-				isSuccess,
-				user: me,
-				isLoading,
-				setRedirect,
-				getRedirect,
-				clearRedirect,
-			}}
-		>
-			{children}
-		</authContext.Provider>
-	)
+  const logout = () => {
+    localStorage.removeItem(process.env.ACCESS_TOKEN)
+    push('/login')
+  }
+
+  return (
+    <authContext.Provider
+      value={{
+        login,
+        logout,
+        isError,
+        isSuccess,
+        user: me,
+        isLoading,
+        setRedirect,
+        getRedirect,
+        clearRedirect,
+      }}
+    >
+      {children}
+    </authContext.Provider>
+  )
 }
 
 const useAuth = () => {
-	const context = useContext(authContext)
-	if (context === undefined) {
-		throw new Error('useAuth must be used within AuthProvider')
-	}
-	return context
+  const context = useContext(authContext)
+  if (context === undefined) {
+    throw new Error('useAuth must be used within AuthProvider')
+  }
+  return context
 }
 export { useAuth, AuthProvider }
 
