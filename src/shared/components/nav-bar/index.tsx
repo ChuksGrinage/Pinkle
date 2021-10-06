@@ -20,7 +20,7 @@ import { useRouter } from 'next/router'
 
 import { useAuth } from 'shared/components'
 
-const Links = ['Forum']
+const Links = ['Post']
 
 const NavLink = ({ children }: { children: ReactNode }) => (
 	<Link
@@ -29,7 +29,6 @@ const NavLink = ({ children }: { children: ReactNode }) => (
 		rounded={'md'}
 		_hover={{
 			textDecoration: 'none',
-			bg: 'brunswickgreen',
 		}}
 		href={'#'}
 	>
@@ -44,7 +43,7 @@ export default function NavBar() {
 
 	return (
 		<>
-			<Box bg={'darkjunglegreen'} opacity={0.8} px={4}>
+			<Box bg={'gray.900'} color='white' opacity={0.8} px={4}>
 				<Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
 					<IconButton
 						size={'md'}
@@ -52,15 +51,9 @@ export default function NavBar() {
 						aria-label={'Open Menu'}
 						display={{ md: 'none' }}
 						onClick={isOpen ? onClose : onOpen}
-						color={'white'}
 					/>
 					<HStack spacing={8} alignItems={'center'}>
-						<HStack
-							as={'nav'}
-							spacing={4}
-							color={'white'}
-							display={{ base: 'none', md: 'flex' }}
-						>
+						<HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
 							{Links.map(link => (
 								<NavLink key={link}>{link}</NavLink>
 							))}
@@ -80,7 +73,7 @@ export default function NavBar() {
 							>
 								<Avatar size={'sm'} />
 							</MenuButton>
-							<MenuList color={'white'} bg={'darkjunglegreen'}>
+							<MenuList>
 								<MenuItem onClick={() => push('/account')}>Account</MenuItem>
 								<MenuDivider />
 								<MenuItem onClick={logout}>Log Out</MenuItem>
@@ -91,7 +84,7 @@ export default function NavBar() {
 
 				{isOpen ? (
 					<Box pb={4} display={{ md: 'none' }}>
-						<Stack as={'nav'} spacing={4} color={'white'}>
+						<Stack as={'nav'} spacing={4}>
 							{Links.map(link => (
 								<NavLink key={link}>{link}</NavLink>
 							))}
