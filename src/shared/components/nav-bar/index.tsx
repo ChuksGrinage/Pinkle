@@ -15,7 +15,7 @@ import {
   useDisclosure,
   Stack,
 } from '@chakra-ui/react'
-import { HamburgerIcon, CloseIcon, Search2Icon } from '@chakra-ui/icons'
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/router'
 
 import { useAuth } from 'shared/components'
@@ -60,27 +60,16 @@ export default function NavBar() {
             </HStack>
           </HStack>
           {user ? (
-            <Flex alignItems={'center'}>
-              <IconButton aria-label='search-icon' marginRight='12px' color='white'>
-                <Search2Icon />
-              </IconButton>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={'full'}
-                  variant={'link'}
-                  cursor={'pointer'}
-                  minW={0}
-                >
-                  <Avatar size={'sm'} />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={() => push('/account')}>Account</MenuItem>
-                  <MenuDivider />
-                  <MenuItem onClick={logout}>Log Out</MenuItem>
-                </MenuList>
-              </Menu>
-            </Flex>
+            <Menu>
+              <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
+                <Avatar size={'sm'} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={() => push('/account')}>Account</MenuItem>
+                <MenuDivider />
+                <MenuItem onClick={logout}>Log Out</MenuItem>
+              </MenuList>
+            </Menu>
           ) : (
             <Button>Login</Button>
           )}

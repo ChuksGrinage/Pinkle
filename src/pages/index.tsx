@@ -2,23 +2,26 @@ import React from 'react'
 import {
   Box,
   Button,
-  Container,
   Grid,
   GridItem,
   Input,
-  Flex,
+  Text,
   Avatar,
   Heading,
-  Center,
+  HStack,
+  VStack,
+  StackDivider,
+  Icon,
+  Link,
 } from '@chakra-ui/react'
 
+import NexLink from 'next/link'
 import { useGetAllPostsQuery } from 'generated'
-import { useAuth } from 'shared/components'
 import { useRouter } from 'next/router'
-import { PostCard } from 'shared/components'
+import { AddIcon, ChatIcon, StarIcon } from '@chakra-ui/icons'
 
 export default function Index() {
-  const { user: { firstName = 'Partner' } = {} } = useAuth()
+  // const { user: { firstName = 'Partner' } = {} } = useAuth()
   const { data: { posts } = {} } = useGetAllPostsQuery()
   const [userInput, setUserInput] = React.useState('')
   const { push } = useRouter()
@@ -31,64 +34,65 @@ export default function Index() {
   }
 
   return (
-    <Box bg={'Gainsboro'}>
-      <Box h={200} bg={'Cultured'} boxShadow={'md'}>
-        <Container maxW='container.xl'>
-          <Flex>
-            <Center h={200}>
-              <Avatar size='2xl' />
-            </Center>
-            <Center h={200}>
-              <Box marginLeft='32px'>
-                <Heading opacity={0.8}>Howdy, {firstName}</Heading>
-                <Heading as='h6' size='xs' opacity={0.8}>
-                  Good to see you again!
-                </Heading>
-              </Box>
-            </Center>
-          </Flex>
-        </Container>
-      </Box>
-      <Container maxW='container.xl'>
-        <Flex justifyContent='space-between' marginTop='24px'>
-          <Heading as='h3' color='darkjunglegreen' opacity={0.8}>
-            Trending Topics
-          </Heading>
-          <Box>
-            <Input
-              value={userInput}
-              onChange={handleInputChange}
-              w={400}
-              borderColor='darkjunglegreen'
-            />
-            <Button
-              colorScheme='teal'
-              marginRight='12px'
-              marginLeft='12px'
-              onClick={handleSearchClick}
-            >
-              Search
-            </Button>
-            <Button colorScheme='teal' onClick={() => push('/create-post')}>
-              Create Post
-            </Button>
-          </Box>
-        </Flex>
-        <Grid templateRows='repeat(3, 1fr)' templateColumns='repeat(5, 1fr)' gap={4}>
-          <GridItem align='start' rowSpan={3} colSpan={3}>
+    <Box p='6'>
+      <Heading as='h3' mb='5'>
+        Groups in your area
+      </Heading>
+      <HStack mb='5'>
+        <Input value={userInput} onChange={handleInputChange} w={400} />
+        <Button colorScheme='blackAlpha' onClick={handleSearchClick}>
+          Search
+        </Button>
+        <Button
+          rightIcon={<AddIcon />}
+          colorScheme='blackAlpha'
+          onClick={() => push('/create-post')}
+        >
+          Create Post
+        </Button>
+      </HStack>
+      <Grid templateRows='repeat(3, 1fr)' templateColumns='repeat(5, 1fr)' gap={4}>
+        <GridItem
+          borderRadius='lg'
+          border='1px solid grey'
+          p='6'
+          align='start'
+          rowSpan={3}
+          colSpan={3}
+        >
+          <VStack align='stretch' divider={<StackDivider borderColor='gray.200' />} spacing={4}>
             {posts?.map((post) => (
-              <Box h={150} key={post.id} w='100%'>
-                <PostCard
-                  title={post.title}
-                  name={post.author.firstName}
-                  id={post.id}
-                  truncatedBody={post.truncatedBody}
-                />
-              </Box>
+              <VStack spacing={5} align='stretch' key={post.id}>
+                <HStack>
+                  <Avatar size='sm' />
+                  <Text color='teal' fontWeight='bold' flex='1'>
+                    {post.author.firstName}
+                  </Text>
+                  <Text as='i' color='grey'>
+                    {post.naturalCreatedAt}
+                  </Text>
+                </HStack>
+                <Heading fontSize='lg'>
+                  <NexLink href='/post/[id]' as={`/post/${post.id}`}>
+                    <Link>{post.title}</Link>
+                  </NexLink>
+                </Heading>
+                <Text as='p'>{post.truncatedBody}...</Text>
+                <HStack>
+                  <HStack>
+                    <Icon color='grey' as={ChatIcon} />
+                    <Text>{post.commentCount}</Text>
+                  </HStack>
+                  <HStack>
+                    <Icon color='grey' as={StarIcon} />
+                    <Text>{post.favoriteCount}</Text>
+                  </HStack>
+                </HStack>
+              </VStack>
             ))}
-          </GridItem>
-        </Grid>
-      </Container>
+          </VStack>
+        </GridItem>
+      </Grid>
     </Box>
   )
 }

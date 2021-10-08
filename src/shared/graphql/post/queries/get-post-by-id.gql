@@ -1,13 +1,25 @@
 query GetPostById($postId: String!) {
-	post(postId: $postId) {
-		id
-		title
-		body
-		truncatedBody
-		grade
-		createdAt
-		author {
-			...UserInfo
-		}
-	}
+  post(postId: $postId) {
+    id
+    title
+    body
+    truncatedBody
+    favoriteCount
+    naturalCreatedAt
+    commentCount
+    allComments {
+      id
+      body
+      naturalCreatedAt
+      user {
+        ...UserInfo
+      }
+      likeCount
+    }
+    grade
+    createdAt
+    author {
+      ...UserInfo
+    }
+  }
 }
