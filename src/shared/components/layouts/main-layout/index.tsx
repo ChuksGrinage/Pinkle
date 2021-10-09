@@ -1,4 +1,5 @@
-import { Box } from '@chakra-ui/layout'
+import { Flex } from '@chakra-ui/layout'
+import { Container } from '@chakra-ui/react'
 import React, { ReactNode } from 'react'
 import NavBar from 'shared/components/nav-bar'
 
@@ -8,10 +9,12 @@ type MainLayoutProps = {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   return (
-    <Box minH='100vh'>
+    <Flex flexDir='column' minH='100vh'>
       <NavBar />
-      <Box as='main'>{children}</Box>
-    </Box>
+      <Container flex='1' py='10' maxW='7xl' as='main'>
+        {children}
+      </Container>
+    </Flex>
   )
 }
 export default MainLayout

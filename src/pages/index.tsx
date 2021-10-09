@@ -78,14 +78,14 @@ export default function Index() {
                   </NexLink>
                 </Heading>
                 <Text as='p'>{post.truncatedBody}...</Text>
-                <HStack>
+                <HStack color='grey'>
                   <HStack>
-                    <Icon color='grey' as={ChatIcon} />
-                    <Text>{post.commentCount}</Text>
+                    <Icon as={ChatIcon} />
+                    <Text as='i'>{post.commentCount}</Text>
                   </HStack>
                   <HStack>
-                    <Icon color='grey' as={StarIcon} />
-                    <Text>{post.favoriteCount}</Text>
+                    <Icon as={StarIcon} />
+                    <Text as='i'>{post.favoriteCount}</Text>
                   </HStack>
                 </HStack>
               </VStack>

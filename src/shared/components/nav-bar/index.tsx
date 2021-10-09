@@ -17,10 +17,20 @@ import {
 } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/router'
-
+import NexLink from 'next/link'
 import { useAuth } from 'shared/components'
 
-const Links = ['Post']
+interface ILink {
+  title: string
+  url: string
+}
+
+const Links: ILink[] = [
+  {
+    title: 'Home',
+    url: '/',
+  },
+]
 
 const NavLink = ({ children }: { children: ReactNode }) => (
   <Link
@@ -55,7 +65,9 @@ export default function NavBar() {
           <HStack spacing={8} alignItems={'center'}>
             <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NexLink key={link.title} href={link.url} as={link.url}>
+                  <Link>{link.title}</Link>
+                </NexLink>
               ))}
             </HStack>
           </HStack>
@@ -79,7 +91,9 @@ export default function NavBar() {
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NexLink key={link.title} href={link.url} as={link.url}>
+                  <Link>{link.title}</Link>
+                </NexLink>
               ))}
             </Stack>
           </Box>
