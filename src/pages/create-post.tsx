@@ -4,11 +4,9 @@ import { useCreatePostMutation } from 'generated'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-// import { useQueryClient } from 'react-query'
 
 const CreatePost = () => {
   const { back, push } = useRouter()
-  // const queryCache = useQueryClient()
   const {
     handleSubmit,
     register,
@@ -17,9 +15,7 @@ const CreatePost = () => {
   } = useForm()
   const { mutate: createPost } = useCreatePostMutation({
     onSuccess: (post) => {
-      // console.log(post.createPost.id)
       push(`post/${post.createPost.id}`)
-      // queryCache.invalidateQueries('GetAllPosts')
       reset()
       back()
     },

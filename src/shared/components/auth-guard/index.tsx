@@ -1,13 +1,12 @@
 import { useRouter } from 'next/router'
 import { useAuth } from 'shared/components/auth-provider'
-// import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 export default function AuthGuard({ children }: { children: JSX.Element }) {
-  const { user, isLoading, setRedirect } = useAuth()
+  const { user, isUserLoading, setRedirect } = useAuth()
   const router = useRouter()
   useEffect(() => {
-    if (!isLoading) {
+    if (!isUserLoading) {
       // auth is initialized and there is no user
       if (!user) {
         // remember the page that user tried to access
@@ -16,15 +15,15 @@ export default function AuthGuard({ children }: { children: JSX.Element }) {
         router.push('/login')
       }
     }
-  }, [isLoading, router, user, setRedirect])
+  }, [isUserLoading, router, user, setRedirect])
 
   /* show loading indicator while the auth provider is still initializing */
-  if (isLoading) {
+  if (isUserLoading) {
     return <h1>Application Loading</h1>
   }
 
   // if auth initialized with a valid user show protected page
-  if (!isLoading && user) {
+  if (!isUserLoading && user) {
     return <>{children}</>
   }
 

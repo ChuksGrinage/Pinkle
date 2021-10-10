@@ -1,10 +1,22 @@
 import React, { useContext, createContext, ReactNode } from 'react'
 import { useRouter } from 'next/router'
-import { useCurrentUserQuery, useTokenAuthMutation } from 'generated'
+import { useCurrentUserQuery, User, useTokenAuthMutation } from 'generated'
 import { useQueryClient } from 'react-query'
 import { UserCredentials } from 'shared/types'
 
-const authContext = createContext(null)
+interface AuthContextI {
+  login: (userLoginData: UserCredentials) => void
+  logout: () => void
+  isUserError: boolean
+  isUserSuccess: boolean
+  user: User
+  isUserLoading: boolean
+  setRedirect: (redirect: string) => void
+  getRedirect: () => string | null
+  clearRedirect: () => void
+}
+
+const authContext = createContext<AuthContextI>(null)
 function setRedirect(redirect: string) {
   window.sessionStorage.setItem(process.env.REDIRECT_KEY, redirect)
 }
@@ -22,7 +34,12 @@ type AuthProviderProps = {
 }
 function AuthProvider({ children }: AuthProviderProps) {
   const queryClient = useQueryClient()
-  const { data: { me = null } = {}, isLoading, isError, isSuccess } = useCurrentUserQuery()
+  const {
+    data: { me = null } = {},
+    isLoading: isUserLoading,
+    isError: isUserError,
+    isSuccess: isUserSuccess,
+  } = useCurrentUserQuery()
   const { push, query } = useRouter()
   const { mutate } = useTokenAuthMutation()
 
@@ -50,15 +67,16 @@ function AuthProvider({ children }: AuthProviderProps) {
     queryClient.clear()
     push('/login')
   }
+
   return (
     <authContext.Provider
       value={{
         login,
         logout,
-        isError,
-        isSuccess,
+        isUserError,
+        isUserSuccess,
         user: me,
-        isLoading,
+        isUserLoading,
         setRedirect,
         getRedirect,
         clearRedirect,

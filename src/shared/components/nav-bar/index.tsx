@@ -1,4 +1,3 @@
-import { ReactNode } from 'react'
 import {
   Box,
   Flex,
@@ -30,21 +29,11 @@ const Links: ILink[] = [
     title: 'Home',
     url: '/',
   },
+  {
+    title: 'Account',
+    url: '/account',
+  },
 ]
-
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={'md'}
-    _hover={{
-      textDecoration: 'none',
-    }}
-    href={'#'}
-  >
-    {children}
-  </Link>
-)
 
 export default function NavBar() {
   const { push } = useRouter()
