@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0'
 import { Box, Container, Grid, GridItem, Heading } from '@chakra-ui/layout'
 import {
   FormControl,
@@ -12,11 +13,10 @@ import { useSignupUserMutation } from 'generated'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useAuth } from 'shared/components'
 
 export default function Account() {
+  const { user } = useUser()
   const { push } = useRouter()
-  const { user } = useAuth()
   const { mutate: signupUser } = useSignupUserMutation()
   const {
     register,
@@ -50,7 +50,7 @@ export default function Account() {
                 <InputLeftElement pointerEvents='none' />
                 <Input
                   id='firstName'
-                  defaultValue={user.firstName}
+                  // defaultValue={user.firstName}
                   {...register('firstName', { required: 'First name is required' })}
                   placeholder='First name'
                 />
@@ -65,7 +65,7 @@ export default function Account() {
                 <InputLeftElement pointerEvents='none' />
                 <Input
                   id='lastName'
-                  defaultValue={user.lastName}
+                  // defaultValue={user.lastName}
                   {...register('lastName', { required: 'Last name is required' })}
                   placeholder='Last name'
                 />

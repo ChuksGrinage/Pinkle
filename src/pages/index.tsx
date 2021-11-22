@@ -21,7 +21,6 @@ import { useRouter } from 'next/router'
 import { AddIcon, ChatIcon, StarIcon } from '@chakra-ui/icons'
 
 export default function Index() {
-  // const { user: { firstName = 'Partner' } = {} } = useAuth()
   const { data: { posts } = {} } = useGetAllPostsQuery()
   const [userInput, setUserInput] = React.useState('')
   const { push } = useRouter()

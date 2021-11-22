@@ -1,47 +1,29 @@
 import React from 'react'
-import { AppProps } from 'next/app'
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
 import theme from 'shared/theme'
-import { AuthGuard, AuthProvider } from 'shared/components'
-import { NextPage } from 'next'
 import { MainLayout } from 'shared/components/layouts'
+import { UserProvider } from '@auth0/nextjs-auth0'
+import { AppProps } from 'next/dist/shared/lib/router/router'
 
 const queryClient = new QueryClient()
 
-type Page<P = {}> = NextPage<P> & {
-  requireAuth: Boolean
-}
-
-type CustomAppProps = AppProps & {
-  Component: Page
-}
-
-function MyApp({ Component, pageProps }: CustomAppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider resetCSS={true} theme={theme}>
-        <ColorModeProvider options={{ useSystemColorMode: true }}>
-          <AuthProvider>
+    <ChakraProvider resetCSS={true} theme={theme}>
+      <ColorModeProvider options={{ useSystemColorMode: true }}>
+        <UserProvider>
+          <QueryClientProvider client={queryClient}>
             <MainLayout>
-              {/* replace false with Component.requireAuth */}
-              {Component.requireAuth ? (
-                <AuthGuard>
-                  {/* TODO: Do we need two NavBar and Components? hmmm */}
-                  <Component {...pageProps} />
-                </AuthGuard>
-              ) : (
-                // public page
-                <Component {...pageProps} />
-              )}
+              <Component {...pageProps} />
             </MainLayout>
             <ReactQueryDevtools initialIsOpen={false} />
-          </AuthProvider>
-        </ColorModeProvider>
-      </ChakraProvider>
-    </QueryClientProvider>
+          </QueryClientProvider>
+        </UserProvider>
+      </ColorModeProvider>
+    </ChakraProvider>
   )
 }
 

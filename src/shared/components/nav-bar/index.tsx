@@ -17,7 +17,7 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/router'
 import NexLink from 'next/link'
-import { useAuth } from 'shared/components'
+import { useUser } from '@auth0/nextjs-auth0'
 
 interface ILink {
   title: string
@@ -38,7 +38,10 @@ const Links: ILink[] = [
 export default function NavBar() {
   const { push } = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { logout, user } = useAuth()
+  const { user, isLoading, error } = useUser()
+
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>something went wrong...</div>
 
   return (
     <>
@@ -68,11 +71,11 @@ export default function NavBar() {
               <MenuList>
                 <MenuItem onClick={() => push('/account')}>Account</MenuItem>
                 <MenuDivider />
-                <MenuItem onClick={logout}>Log Out</MenuItem>
+                <MenuItem onClick={() => console.log('logout')}>Log Out</MenuItem>
               </MenuList>
             </Menu>
           ) : (
-            <Button>Login</Button>
+            <a href='/api/auth/login'>Login</a>
           )}
         </Flex>
 

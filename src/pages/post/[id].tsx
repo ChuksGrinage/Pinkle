@@ -7,12 +7,12 @@ import { useAddCommentMutation, useGetPostByIdQuery } from 'generated'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useAuth } from 'shared/components'
 
 import NexLink from 'next/link'
+import { useUser } from '@auth0/nextjs-auth0'
 const Index = () => {
   const { query: { id } = {}, isReady } = useRouter()
-  const { user } = useAuth()
+  const { user } = useUser()
   const postId = id as string
   const {
     data: { post } = {},
