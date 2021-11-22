@@ -1,14 +1,15 @@
 const path = require('path')
 
 module.exports = {
+	swcMinify: true,
 	webpack: config => {
 		config.resolve.modules.push(path.resolve('src'))
 
 		return config
 	},
-	env: {
-		NEXT_PUBLIC_API_URL: 'http://localhost:8000/graphql/',
-		REDIRECT_KEY: 'REDIRECT_KEY',
-		ACCESS_TOKEN: 'ACCESS_TOKEN'
+	experimental: {
+		// https://github.com/vercel/next.js/issues/30330
+		// TODO: current workaround for Chakra and NEXTJS 12
+		esmExternals: false
 	}
 }
