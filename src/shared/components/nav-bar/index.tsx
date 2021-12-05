@@ -33,6 +33,18 @@ const Links: ILink[] = [
     title: 'Account',
     url: '/account',
   },
+  {
+    title: 'Login',
+    url: '/api/auth/login',
+  },
+  {
+    title: 'Logout',
+    url: '/api/auth/logout',
+  },
+  {
+    title: 'Session',
+    url: '/api/auth/me',
+  },
 ]
 
 export default function NavBar() {
@@ -56,7 +68,7 @@ export default function NavBar() {
           />
           <HStack spacing={8} alignItems={'center'}>
             <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
-              {Links.map((link) => (
+              {Links.map(link => (
                 <NexLink key={link.title} href={link.url} as={link.url}>
                   <Link>{link.title}</Link>
                 </NexLink>
@@ -82,7 +94,7 @@ export default function NavBar() {
         {isOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
+              {Links.map(link => (
                 <NexLink key={link.title} href={link.url} as={link.url}>
                   <Link>{link.title}</Link>
                 </NexLink>
