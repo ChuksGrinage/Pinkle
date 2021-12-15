@@ -1,0 +1,42 @@
+# mutation AddComment($body: String!, $postId: String!) {
+#   addComment(commentInput: { body: $body }, postId: $postId) {
+#     id
+#     body
+#     createdAt
+#     user {
+#       ...UserInfo
+#     }
+#   }
+# }
+
+# mutation CreatePost(
+#   $title: String!
+#   $body: String!
+#   $grade: String
+#   $zipCode: String
+#   $ups: Int
+#   $downs: Int
+#   $score: Int
+# ) {
+#   createPost(
+#     createPostInput: {
+#       title: $title
+#       body: $body
+#       grade: $grade
+#       zipCode: $zipCode
+#       ups: $ups
+#       downs: $downs
+#       score: $score
+#     }
+#   ) {
+#     id
+#     title
+#     body
+#     truncatedBody
+#     createdAt
+#     grade
+#     author {
+#       ...UserInfo
+#     }
+#   }
+# }

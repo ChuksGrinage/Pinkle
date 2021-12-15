@@ -50,10 +50,10 @@ const Links: ILink[] = [
 export default function NavBar() {
   const { push } = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { user, isLoading, error } = useUser()
+  // const { user, isLoading, error } = useUser()
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>something went wrong...</div>
+  // if (isLoading) return <div>Loading...</div>
+  // if (error) return <div>something went wrong...</div>
 
   return (
     <>
@@ -75,7 +75,7 @@ export default function NavBar() {
               ))}
             </HStack>
           </HStack>
-          {user ? (
+          {/* {user ? (
             <Menu>
               <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
                 <Avatar size={'sm'} />
@@ -88,7 +88,7 @@ export default function NavBar() {
             </Menu>
           ) : (
             <a href='/api/auth/login'>Login</a>
-          )}
+          )} */}
         </Flex>
 
         {isOpen ? (

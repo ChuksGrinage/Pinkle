@@ -1,10 +1,7 @@
 export const client = <TData, TVariables>(query: string, variables?: TVariables): (() => Promise<TData>) => {
 	return async () => {
-		const token = window.localStorage.getItem(process.env.ACCESS_TOKEN)
 		const headers = new Headers()
 		headers.append('content-type', 'application/json')
-
-		if (token) headers.append('Authorization', `JWT ${token}`)
 
 		const res = await fetch(process.env.NEXT_PUBLIC_API_URL, {
 			method: 'POST',

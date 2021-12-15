@@ -19,12 +19,17 @@ import NexLink from 'next/link'
 import { useGetAllPostsQuery } from 'generated'
 import { useRouter } from 'next/router'
 import { AddIcon, ChatIcon, StarIcon } from '@chakra-ui/icons'
+import { useSession } from 'shared/utils'
 
 export default function Index() {
+  const [session, loading] = useSession({
+    required: true,
+  })
+  console.log({ session, loading })
   const { data: { posts } = {} } = useGetAllPostsQuery()
   const [userInput, setUserInput] = React.useState('')
   const { push } = useRouter()
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     setUserInput(e.currentTarget.value)
   }
 
@@ -60,7 +65,7 @@ export default function Index() {
           colSpan={3}
         >
           <VStack align='stretch' divider={<StackDivider borderColor='gray.200' />} spacing={4}>
-            {posts?.map((post) => (
+            {posts?.map(post => (
               <VStack spacing={5} align='stretch' key={post.id}>
                 <HStack>
                   <Avatar size='sm' />
