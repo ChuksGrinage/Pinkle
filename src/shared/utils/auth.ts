@@ -4,8 +4,6 @@ import { useRouter } from "next/router"
 import { useMutation, useQuery } from "react-query"
 import { client } from "."
 
-const silentRefresh = client('/refresh')
-const fetchSession = client('/me', { method: 'GET' })
 
 export function useSession({
 	required,
@@ -13,16 +11,16 @@ export function useSession({
 	queryConfig = {},
 } = {}) {
 	const router = useRouter()
-	const query = useQuery(["session"], fetchSession, {
+	const query = useQuery(["session"], () => client('/me', { method: 'GET' }), {
 		...queryConfig,
 		retry: false,
 		onSettled(data, error) {
+			console.log(data, error)
 			if (queryConfig.onSettled) queryConfig.onSettled(data, error)
-			if (error) return silentRefresh()
+			if (error) return client('/refresh')
 			if (data || !required) return
 			router.push(redirectTo)
 		},
-		// onError: () => silentRefresh()
 	})
 	return [query.data, query.status === "loading"]
 }
