@@ -11,12 +11,16 @@ export function useSession({
 	queryConfig = {},
 } = {}) {
 	const router = useRouter()
+	// const { mutate: silentRefresh } = useMutation(() => client('/refresh'), {
+	// 	onError: router.push('/login')
+	// })
 	const query = useQuery(["session"], () => client('/me', { method: 'GET' }), {
 		...queryConfig,
 		retry: false,
 		onSettled(data, error) {
 			console.log(data, error)
 			if (queryConfig.onSettled) queryConfig.onSettled(data, error)
+			// TODO: Need to figure something out if the refresh fails
 			if (error) return client('/refresh')
 			if (data || !required) return
 			router.push(redirectTo)
