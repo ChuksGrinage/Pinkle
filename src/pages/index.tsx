@@ -16,16 +16,17 @@ import {
 } from '@chakra-ui/react'
 
 import NexLink from 'next/link'
-import { useGetAllPostsQuery } from 'generated'
+import { useGetAllPostsQuery, useGetTokenMutation } from 'generated'
 import { useRouter } from 'next/router'
 import { AddIcon, ChatIcon, StarIcon } from '@chakra-ui/icons'
-import { useSession } from 'shared/utils'
+import { useAuth, useSession } from 'shared/utils'
 
 export default function Index() {
+  const { logout } = useAuth()
   const [session, loading] = useSession({
     required: true,
   })
-  console.log({ session, loading })
+
   const { data: { posts } = {} } = useGetAllPostsQuery()
   const [userInput, setUserInput] = React.useState('')
   const { push } = useRouter()
@@ -34,7 +35,7 @@ export default function Index() {
   }
 
   const handleSearchClick = () => {
-    console.log({ userInput })
+    logout()
   }
 
   return (

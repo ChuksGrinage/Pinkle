@@ -21,3 +21,13 @@
 #     ...UserInfo
 #   }
 # }
+
+mutation GetToken($email: String!, $password: String!) {
+  getToken(userCredentials: { email: $email, password: $password }) {
+    token {
+      accessToken
+      tokenType
+    }
+    error
+  }
+}

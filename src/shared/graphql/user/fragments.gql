@@ -1,12 +1,8 @@
-# fragment UserInfo on User {
-#   id
-#   email
-#   firstName
-#   lastName
-#   dateOfBirth
-#   dateJoined
-#   zipCode
-# }
+fragment UserInfo on User {
+  id
+  email
+  createdAt
+}
 
 # input StudentInput {
 #   dateOfBirth: DateTime

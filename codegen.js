@@ -1,8 +1,7 @@
-
-const url = 'http://localhost:8000/graphql/'
+const URL = 'http://localhost:8000/graphql'
 module.exports = {
 	overwrite: true,
-	schema: url,
+	schema: URL,
 	documents: ['src/**/*.graphql', 'src/**/*.gql'],
 	hooks: {
 		afterAllFileWrite: ['prettier --write'],
@@ -21,8 +20,8 @@ module.exports = {
 			],
 			config: {
 				fetcher: {
-					func: 'shared/utils#client'
-					// endpoint: url,
+					func: 'shared/utils#codegenClient',
+					// endpoint: URL,
 					// fetchParams: {
 					// 	credentials: 'include',
 					// 	headers: {

@@ -14,12 +14,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ChakraProvider resetCSS={true} theme={theme}>
       <ColorModeProvider options={{ useSystemColorMode: true }}>
         <QueryClientProvider client={queryClient}>
-          <QueryClientProvider client={queryClient}>
-            <MainLayout>
-              <Component {...pageProps} />
-            </MainLayout>
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <MainLayout>
+            <Component {...pageProps} />
+          </MainLayout>
         </QueryClientProvider>
       </ColorModeProvider>
     </ChakraProvider>

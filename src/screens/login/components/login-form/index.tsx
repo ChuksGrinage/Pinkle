@@ -14,16 +14,18 @@ import {
   Container,
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
+import { useAuth } from 'shared/utils'
 
 const LoginForm = () => {
+  const { login } = useAuth()
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm()
 
-  const onSubmit = async (userLoginData) => {
-    console.log('login', userLoginData)
+  const onSubmit = async (userLoginData: { email: string; password: string }) => {
+    login(userLoginData)
   }
 
   return (
@@ -64,7 +66,7 @@ const LoginForm = () => {
               {...register('password', { required: 'password is required' })}
               type='password'
               placeholder='Password'
-              defaultValue='test1'
+              defaultValue='password'
             />
           </InputGroup>
           <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>

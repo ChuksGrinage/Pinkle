@@ -1,5 +1,8 @@
-# query CurrentUser {
-#   me {
-#     ...UserInfo
-#   }
-# }
+query Me {
+  me {
+    me {
+      ...UserInfo
+    }
+    error
+  }
+}
