@@ -11,9 +11,9 @@ export function useSession({
 	queryConfig = {},
 } = {}) {
 	const router = useRouter()
-	// const { mutate: silentRefresh } = useMutation(() => client('/refresh'), {
-	// 	onError: router.push('/login')
-	// })
+	const { mutate: silentRefresh } = useMutation(() => client('/refresh'), {
+		onError: () => router.push('/login')
+	})
 	const query = useQuery(["session"], () => client('/me', { method: 'GET' }), {
 		...queryConfig,
 		retry: false,
@@ -21,7 +21,7 @@ export function useSession({
 			console.log(data, error)
 			if (queryConfig.onSettled) queryConfig.onSettled(data, error)
 			// TODO: Need to figure something out if the refresh fails
-			if (error) return client('/refresh')
+			if (error) return silentRefresh()
 			if (data || !required) return
 			router.push(redirectTo)
 		},
@@ -51,22 +51,13 @@ export async function getToken({ email, password }) {
 	return null
 }
 
-export async function revokeToken() {
-	const res = await fetch("http://localhost:8000/logout", {
-		method: 'DELETE',
-		credentials: "include",
-	});
-	const session = await res.json()
-	if (Object.keys(session).length) {
-		return session
-	}
-	return null
-}
-
 
 export function useAuth() {
 
 	const { mutate, error } = useMutation(userCredentials => getToken(userCredentials))
+	const { mutate: logout } = useMutation(() => client('/logout', { method: 'DELETE' }), {
+		onSettled: () => router.push('/login')
+	})
 	const router = useRouter()
 
 
@@ -81,10 +72,6 @@ export function useAuth() {
 				if (router.pathname !== '/login') router.push('login')
 			}
 		})
-	}
-	const logout = () => {
-		revokeToken()
-		router.push('/login')
 	}
 
 	return { login, logout, error }
