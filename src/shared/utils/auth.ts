@@ -1,6 +1,4 @@
-// @ts-nocheck
 import { useRouter } from "next/router"
-// import { useGetTokenMutation, useMeQuery } from "generated"
 import { useMutation, useQuery } from "react-query"
 import { client } from "."
 
@@ -32,6 +30,7 @@ function useSession({
 
 
 const useAuth = () => {
+	const router = useRouter()
 	const { mutate: getToken, error } = useMutation(userCredentials => client('/login', {
 		method: 'POST',
 		credentials: "include",
@@ -43,8 +42,6 @@ const useAuth = () => {
 	const { mutate: logout } = useMutation(() => client('/logout', { method: 'DELETE' }), {
 		onSettled: () => router.push('/login')
 	})
-	const router = useRouter()
-
 
 	const login = (userCredentials: { email: string, password: string }) => {
 		// TODO: WTF is going on here; why do I need to do all of this to get it to work?!!
