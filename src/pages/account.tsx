@@ -9,25 +9,19 @@ import {
   Button,
   FormLabel,
 } from '@chakra-ui/react'
-import { useSignupUserMutation } from 'generated'
-import { useRouter } from 'next/router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
 export default function Account() {
   const { user } = useUser()
-  const { push } = useRouter()
-  const { mutate: signupUser } = useSignupUserMutation()
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isDirty },
   } = useForm()
 
-  const onSubmit = async (userSignupData) => {
-    signupUser(userSignupData, {
-      onSuccess: () => push('/login'),
-    })
+  const onSubmit = async userSignupData => {
+    console.log({ userSignupData })
   }
 
   if (!user) return
@@ -136,4 +130,4 @@ export default function Account() {
     </Box>
   )
 }
-Account.requireAuth = true
+Account

@@ -1,23 +1,6 @@
-import {
-  Box,
-  Flex,
-  Avatar,
-  HStack,
-  Link,
-  IconButton,
-  Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-  useDisclosure,
-  Stack,
-} from '@chakra-ui/react'
+import { Box, Flex, HStack, Link, IconButton, useDisclosure, Stack } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
-import { useRouter } from 'next/router'
 import NexLink from 'next/link'
-import { useUser } from '@auth0/nextjs-auth0'
 
 interface ILink {
   title: string
@@ -48,7 +31,7 @@ const Links: ILink[] = [
 ]
 
 export default function NavBar() {
-  const { push } = useRouter()
+  // const { push } = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   // const { user, isLoading, error } = useUser()
 

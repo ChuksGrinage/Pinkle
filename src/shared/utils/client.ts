@@ -1,4 +1,4 @@
-export const codegenClient = <TData, TVariables>(query: string, variables?: TVariables): (() => Promise<TData>) =>
+const codegenClient = <TData, TVariables>(query: string, variables?: TVariables): (() => Promise<TData>) =>
 	async () => client('/graphql', {
 		headers: {
 			'content-type': 'application/json'
@@ -10,7 +10,7 @@ export const codegenClient = <TData, TVariables>(query: string, variables?: TVar
 	})
 
 
-export const client = async (url: string, params?: RequestInit) => {
+const client = async (url: string, params?: RequestInit) => {
 	const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${url}`, {
 		method: 'POST',
 		credentials: 'include',
@@ -23,3 +23,5 @@ export const client = async (url: string, params?: RequestInit) => {
 	}
 	return json
 }
+
+export { client, codegenClient }

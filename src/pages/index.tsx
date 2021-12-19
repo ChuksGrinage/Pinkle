@@ -12,18 +12,16 @@ import {
   VStack,
   StackDivider,
   Icon,
-  Link,
 } from '@chakra-ui/react'
 
-import NexLink from 'next/link'
-import { useGetAllPostsQuery, useGetTokenMutation } from 'generated'
+import { useGetAllPostsQuery } from 'generated'
 import { useRouter } from 'next/router'
 import { AddIcon, ChatIcon, StarIcon } from '@chakra-ui/icons'
-import { useAuth, useSession } from 'shared/utils'
+import { useSession, useAuth } from 'shared/utils'
 
 export default function Index() {
   const { logout } = useAuth()
-  const [session, loading] = useSession({
+  useSession({
     required: true,
   })
 
@@ -71,26 +69,26 @@ export default function Index() {
                 <HStack>
                   <Avatar size='sm' />
                   <Text color='teal' fontWeight='bold' flex='1'>
-                    {post.author.firstName}
+                    {/* {post.author.firstName} */}
                   </Text>
                   <Text as='i' color='grey'>
-                    {post.naturalCreatedAt}
+                    {/* {post.naturalCreatedAt} */}
                   </Text>
                 </HStack>
                 <Heading fontSize='lg'>
-                  <NexLink href='/post/[id]' as={`/post/${post.id}`}>
+                  {/* <NexLink href='/post/[id]' as={`/post/${post.id}`}>
                     <Link>{post.title}</Link>
-                  </NexLink>
+                  </NexLink> */}
                 </Heading>
-                <Text as='p'>{post.truncatedBody}...</Text>
+                {/* <Text as='p'>{post.truncatedBody}...</Text> */}
                 <HStack color='grey'>
                   <HStack>
                     <Icon as={ChatIcon} />
-                    <Text as='i'>{post.commentCount}</Text>
+                    {/* <Text as='i'>{post.commentCount}</Text> */}
                   </HStack>
                   <HStack>
                     <Icon as={StarIcon} />
-                    <Text as='i'>{post.favoriteCount}</Text>
+                    {/* <Text as='i'>{post.favoriteCount}</Text> */}
                   </HStack>
                 </HStack>
               </VStack>
@@ -102,4 +100,4 @@ export default function Index() {
   )
 }
 
-Index.requireAuth = true
+Index

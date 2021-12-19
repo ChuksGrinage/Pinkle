@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "react-query"
 import { client } from "."
 
 
-export function useSession({
+function useSession({
 	required,
 	redirectTo = "/login",
 	queryConfig = {},
@@ -30,31 +30,16 @@ export function useSession({
 }
 
 
-export async function getToken({ email, password }) {
-	// TODO: WTF is going on here; why do I need to do all of this to get it to work?!!
-	const formBody = new FormData()
-	formBody.set("username", email)
-	formBody.set("password", password)
-	const data = new URLSearchParams(formBody)
-	const res = await fetch("http://localhost:8000/login", {
+
+const useAuth = () => {
+	const { mutate: getToken, error } = useMutation(userCredentials => client('/login', {
 		method: 'POST',
 		credentials: "include",
 		headers: {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
-		body: data
-	});
-	const session = await res.json()
-	if (Object.keys(session).length) {
-		return session
-	}
-	return null
-}
-
-
-export function useAuth() {
-
-	const { mutate, error } = useMutation(userCredentials => getToken(userCredentials))
+		body: userCredentials
+	}))
 	const { mutate: logout } = useMutation(() => client('/logout', { method: 'DELETE' }), {
 		onSettled: () => router.push('/login')
 	})
@@ -62,10 +47,13 @@ export function useAuth() {
 
 
 	const login = (userCredentials: { email: string, password: string }) => {
-
-		mutate(userCredentials, {
-			onSuccess: (data) => {
-				localStorage.setItem(process.env.NEXT_PUBLIC_ACCESS_TOKEN, data.accessToken)
+		// TODO: WTF is going on here; why do I need to do all of this to get it to work?!!
+		const formBody = new FormData()
+		formBody.set("username", userCredentials.email)
+		formBody.set("password", userCredentials.password)
+		const data = new URLSearchParams(formBody)
+		getToken(data, {
+			onSuccess: () => {
 				router.push('/')
 			},
 			onError: () => {
@@ -76,3 +64,5 @@ export function useAuth() {
 
 	return { login, logout, error }
 }
+
+export { useAuth, useSession }
