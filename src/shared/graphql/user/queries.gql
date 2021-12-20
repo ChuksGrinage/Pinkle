@@ -1,8 +1,0 @@
-query Me {
-  me {
-    me {
-      ...UserInfo
-    }
-    error
-  }
-}

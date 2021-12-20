@@ -1,4 +1,4 @@
-import { Heading, Link, Text, VStack, Box, SimpleGrid, HStack } from '@chakra-ui/layout'
+import { Heading, Link, Text, VStack, Box, SimpleGrid } from '@chakra-ui/layout'
 import {
   Button,
   FormControl,
@@ -21,7 +21,7 @@ const Index = () => {
     formState: { errors, isSubmitting },
   } = useForm()
 
-  const onSubmit = async (userSignupData) => {
+  const onSubmit = async userSignupData => {
     signupUser(userSignupData, {
       onSuccess: () => push('/login'),
     })
@@ -48,7 +48,7 @@ const Index = () => {
             <Text fontSize='sm'>Join the world's largest homeschooling communtiy!</Text>
           </Box>
 
-          <HStack>
+          {/* <HStack>
             <FormControl isInvalid={errors.firstName}>
               <InputGroup>
                 <InputLeftElement pointerEvents='none' />
@@ -72,7 +72,7 @@ const Index = () => {
               </InputGroup>
               <FormErrorMessage>{errors?.lastName?.message}</FormErrorMessage>
             </FormControl>
-          </HStack>
+          </HStack> */}
 
           <FormControl isInvalid={errors.email}>
             <InputGroup>
@@ -105,7 +105,7 @@ const Index = () => {
               <Input
                 id='confirmPassword'
                 {...register('confirmPassword', {
-                  validate: (value) => value === watch('password') || 'Passwords do not match',
+                  validate: value => value === watch('password') || 'Passwords do not match',
                   required: 'Please verify password',
                 })}
                 type='password'

@@ -1,32 +1,10 @@
-# mutation SignupUser(
-#   $email: String!
-#   $password: String!
-#   $firstName: String
-#   $lastName: String
-#   $dateOfBirth: DateTime
-#   $zipCode: String
-#   $students: [StudentInput]
-# ) {
-#   signupUser(
-#     signupUserInput: {
-#       email: $email
-#       password: $password
-#       firstName: $firstName
-#       lastName: $lastName
-#       dateOfBirth: $dateOfBirth
-#       zipCode: $zipCode
-#       students: $students
-#     }
-#   ) {
-#     ...UserInfo
-#   }
-# }
-
-mutation GetToken($email: String!, $password: String!) {
-  getToken(userCredentials: { email: $email, password: $password }) {
-    token {
-      accessToken
-      tokenType
+mutation SignupUser(
+  $email: String!
+  $password: String! # $students: [StudentInput]
+) {
+  createUser(params: { email: $email, password: $password }) {
+    result {
+      ...UserInfo
     }
     error
   }

@@ -27,7 +27,7 @@ export type CreateUserInput = {
 
 export type CreateUserResponse = {
   __typename?: 'CreateUserResponse'
-  user?: Maybe<User>
+  result?: Maybe<User>
   error?: Maybe<Scalars['String']>
 }
 
@@ -56,20 +56,15 @@ export type MeResponse = {
 export type Mutation = {
   __typename?: 'Mutation'
   createPost: Post
-  getToken: GetTokenResponse
   createUser: CreateUserResponse
 }
 
 export type MutationCreatePostArgs = {
-  input: CreatePostInput
-}
-
-export type MutationGetTokenArgs = {
-  userCredentials: GetTokenInput
+  params: CreatePostInput
 }
 
 export type MutationCreateUserArgs = {
-  user: CreateUserInput
+  params: CreateUserInput
 }
 
 export type Post = {
@@ -107,22 +102,14 @@ export type GetAllPostsQuery = { __typename?: 'Query' } & {
 
 export type UserInfoFragment = { __typename?: 'User' } & Pick<User, 'id' | 'email' | 'createdAt'>
 
-export type GetTokenMutationVariables = Exact<{
+export type SignupUserMutationVariables = Exact<{
   email: Scalars['String']
   password: Scalars['String']
 }>
 
-export type GetTokenMutation = { __typename?: 'Mutation' } & {
-  getToken: { __typename?: 'GetTokenResponse' } & Pick<GetTokenResponse, 'error'> & {
-      token?: Maybe<{ __typename?: 'Token' } & Pick<Token, 'accessToken' | 'tokenType'>>
-    }
-}
-
-export type MeQueryVariables = Exact<{ [key: string]: never }>
-
-export type MeQuery = { __typename?: 'Query' } & {
-  me: { __typename?: 'MeResponse' } & Pick<MeResponse, 'error'> & {
-      me?: Maybe<{ __typename?: 'User' } & UserInfoFragment>
+export type SignupUserMutation = { __typename?: 'Mutation' } & {
+  createUser: { __typename?: 'CreateUserResponse' } & Pick<CreateUserResponse, 'error'> & {
+      result?: Maybe<{ __typename?: 'User' } & UserInfoFragment>
     }
 }
 
@@ -150,41 +137,24 @@ export const useGetAllPostsQuery = <TData = GetAllPostsQuery, TError = unknown>(
     codegenClient<GetAllPostsQuery, GetAllPostsQueryVariables>(GetAllPostsDocument, variables),
     options
   )
-export const GetTokenDocument = `
-    mutation GetToken($email: String!, $password: String!) {
-  getToken(userCredentials: {email: $email, password: $password}) {
-    token {
-      accessToken
-      tokenType
-    }
-    error
-  }
-}
-    `
-export const useGetTokenMutation = <TError = unknown, TContext = unknown>(
-  options?: UseMutationOptions<GetTokenMutation, TError, GetTokenMutationVariables, TContext>
-) =>
-  useMutation<GetTokenMutation, TError, GetTokenMutationVariables, TContext>(
-    (variables?: GetTokenMutationVariables) =>
-      codegenClient<GetTokenMutation, GetTokenMutationVariables>(GetTokenDocument, variables)(),
-    options
-  )
-export const MeDocument = `
-    query Me {
-  me {
-    me {
+export const SignupUserDocument = `
+    mutation SignupUser($email: String!, $password: String!) {
+  createUser(params: {email: $email, password: $password}) {
+    result {
       ...UserInfo
     }
     error
   }
 }
     ${UserInfoFragmentDoc}`
-export const useMeQuery = <TData = MeQuery, TError = unknown>(
-  variables?: MeQueryVariables,
-  options?: UseQueryOptions<MeQuery, TError, TData>
+export const useSignupUserMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<SignupUserMutation, TError, SignupUserMutationVariables, TContext>
 ) =>
-  useQuery<MeQuery, TError, TData>(
-    ['Me', variables],
-    codegenClient<MeQuery, MeQueryVariables>(MeDocument, variables),
+  useMutation<SignupUserMutation, TError, SignupUserMutationVariables, TContext>(
+    (variables?: SignupUserMutationVariables) =>
+      codegenClient<SignupUserMutation, SignupUserMutationVariables>(
+        SignupUserDocument,
+        variables
+      )(),
     options
   )
