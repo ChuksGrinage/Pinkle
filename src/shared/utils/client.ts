@@ -1,13 +1,16 @@
 const codegenClient = <TData, TVariables>(query: string, variables?: TVariables): (() => Promise<TData>) =>
-	async () => client('/graphql', {
-		headers: {
-			'content-type': 'application/json'
-		},
-		body: JSON.stringify({
-			query,
-			variables
+	async () => {
+		const { data } = await client('/graphql', {
+			headers: {
+				'content-type': 'application/json'
+			},
+			body: JSON.stringify({
+				query,
+				variables
+			})
 		})
-	})
+		return data
+	}
 
 
 const client = async (url: string, params?: RequestInit) => {

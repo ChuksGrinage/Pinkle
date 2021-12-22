@@ -1,7 +1,12 @@
 query GetAllPosts {
   posts {
-    title
-    content
+    result {
+      id
+      title
+      content
+      votes
+    }
+    error
   }
 }
 

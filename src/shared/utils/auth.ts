@@ -4,7 +4,7 @@ import { client } from "."
 
 
 function useSession({
-	required,
+	required = true,
 	redirectTo = "/login",
 	queryConfig = {},
 } = {}) {
@@ -16,7 +16,6 @@ function useSession({
 		...queryConfig,
 		retry: false,
 		onSettled(data, error) {
-			console.log(data, error)
 			if (queryConfig.onSettled) queryConfig.onSettled(data, error)
 			// TODO: Need to figure something out if the refresh fails
 			if (error) return silentRefresh()

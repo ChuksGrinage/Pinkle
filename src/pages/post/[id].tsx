@@ -9,7 +9,6 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 
 import NexLink from 'next/link'
-import { useUser } from '@auth0/nextjs-auth0'
 const Index = () => {
   const { query: { id } = {}, isReady } = useRouter()
   const { user } = useUser()
@@ -50,7 +49,7 @@ const Index = () => {
             <div>loading comments</div>
           ) : (
             <Grid p='10' templateColumns='repeat(5, 1fr)' gap={10} w='full'>
-              {post.allComments?.map((comment) => (
+              {post.allComments?.map(comment => (
                 <>
                   <GridItem key={comment.id} colSpan={1}>
                     <VStack justify='center'>

@@ -1,0 +1,5 @@
+fragment PostData on Post {
+  title
+  content
+  published
+}

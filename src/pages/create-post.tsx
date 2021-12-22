@@ -4,25 +4,29 @@ import { useCreatePostMutation } from 'generated'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { useSession } from 'shared/utils'
 
 const CreatePost = () => {
-  const { back, push } = useRouter()
+  useSession()
+  const { push } = useRouter()
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm()
   const { mutate: createPost } = useCreatePostMutation({
-    onSuccess: (post) => {
-      push(`post/${post.createPost.id}`)
-      reset()
-      back()
+    onSuccess: () => {
+      push('/')
     },
   })
 
-  const onSubmit = (post) => {
-    createPost(post)
+  type PostData = {
+    title: string
+    content: string
+  }
+  const onSubmit = (post: any) => {
+    console.log(post)
+    createPost(post as PostData)
   }
 
   return (
@@ -44,13 +48,14 @@ const CreatePost = () => {
         </FormControl>
 
         <FormControl h='fit-content' isInvalid={errors.content}>
+          <FormLabel htmlFor='title'>Content:</FormLabel>
           <Textarea
-            id='body'
+            id='content'
             placeholder='Write your post...'
             w='80%'
             h='xs'
-            {...register('body', {
-              required: 'body is required',
+            {...register('content', {
+              required: 'content is required',
             })}
           />
           <FormErrorMessage>{errors?.content?.message}</FormErrorMessage>

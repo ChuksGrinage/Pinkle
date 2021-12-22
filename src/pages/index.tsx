@@ -12,7 +12,9 @@ import {
   VStack,
   StackDivider,
   Icon,
+  Link,
 } from '@chakra-ui/react'
+import NextLink from 'next/link'
 
 import { useGetAllPostsQuery } from 'generated'
 import { useRouter } from 'next/router'
@@ -21,11 +23,10 @@ import { useSession, useAuth } from 'shared/utils'
 
 export default function Index() {
   const { logout } = useAuth()
-  useSession({
-    required: true,
-  })
+  useSession({})
 
-  const { data: { posts } = {} } = useGetAllPostsQuery()
+  const { data, isLoading } = useGetAllPostsQuery()
+  const posts = data?.posts.result
   const [userInput, setUserInput] = React.useState('')
   const { push } = useRouter()
   const handleInputChange = e => {
@@ -36,6 +37,7 @@ export default function Index() {
     logout()
   }
 
+  if (isLoading) return <Box>Loading...</Box>
   return (
     <Box p='6'>
       <Heading as='h3' mb='5'>
@@ -64,35 +66,39 @@ export default function Index() {
           colSpan={3}
         >
           <VStack align='stretch' divider={<StackDivider borderColor='gray.200' />} spacing={4}>
-            {posts?.map(post => (
-              <VStack spacing={5} align='stretch' key={post.id}>
-                <HStack>
-                  <Avatar size='sm' />
-                  <Text color='teal' fontWeight='bold' flex='1'>
-                    {/* {post.author.firstName} */}
-                  </Text>
-                  <Text as='i' color='grey'>
-                    {/* {post.naturalCreatedAt} */}
-                  </Text>
-                </HStack>
-                <Heading fontSize='lg'>
-                  {/* <NexLink href='/post/[id]' as={`/post/${post.id}`}>
-                    <Link>{post.title}</Link>
-                  </NexLink> */}
-                </Heading>
-                {/* <Text as='p'>{post.truncatedBody}...</Text> */}
-                <HStack color='grey'>
+            {isLoading ? (
+              <Box>Loading....</Box>
+            ) : (
+              posts?.map(post => (
+                <VStack spacing={5} align='stretch' key={post.id}>
                   <HStack>
-                    <Icon as={ChatIcon} />
-                    {/* <Text as='i'>{post.commentCount}</Text> */}
+                    <Avatar size='sm' />
+                    <Text color='teal' fontWeight='bold' flex='1'>
+                      {/* {post.author.firstName} */}
+                    </Text>
+                    <Text as='i' color='grey'>
+                      {/* {post.naturalCreatedAt} */}
+                    </Text>
                   </HStack>
-                  <HStack>
-                    <Icon as={StarIcon} />
-                    {/* <Text as='i'>{post.favoriteCount}</Text> */}
+                  <Heading fontSize='lg'>
+                    <NextLink href='/post/[id]' as={`/post/${post.id}`}>
+                      <Link>{post.title}</Link>
+                    </NextLink>
+                  </Heading>
+                  <Text as='p'>{post.content}...</Text>
+                  <HStack color='grey'>
+                    <HStack>
+                      <Icon as={ChatIcon} />
+                      <Text as='i'>0</Text>
+                    </HStack>
+                    <HStack>
+                      <Icon as={StarIcon} />
+                      <Text as='i'>{post.votes}</Text>
+                    </HStack>
                   </HStack>
-                </HStack>
-              </VStack>
-            ))}
+                </VStack>
+              ))
+            )}
           </VStack>
         </GridItem>
       </Grid>

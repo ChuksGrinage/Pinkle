@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query'
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from 'react-query'
 import { codegenClient } from 'shared/utils'
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -16,8 +16,8 @@ export type Scalars = {
 }
 
 export type CreatePostInput = {
-  title?: Maybe<Scalars['String']>
   content?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>
 }
 
 export type CreateUserInput = {
@@ -27,8 +27,8 @@ export type CreateUserInput = {
 
 export type CreateUserResponse = {
   __typename?: 'CreateUserResponse'
-  result?: Maybe<User>
   error?: Maybe<Scalars['String']>
+  result?: Maybe<User>
 }
 
 export type GetTokenInput = {
@@ -38,8 +38,8 @@ export type GetTokenInput = {
 
 export type GetTokenResponse = {
   __typename?: 'GetTokenResponse'
-  token?: Maybe<Token>
   error?: Maybe<Scalars['String']>
+  token?: Maybe<Token>
 }
 
 export type InvalidUser = {
@@ -49,13 +49,13 @@ export type InvalidUser = {
 
 export type MeResponse = {
   __typename?: 'MeResponse'
-  me?: Maybe<User>
   error?: Maybe<Scalars['String']>
+  me?: Maybe<User>
 }
 
 export type Mutation = {
   __typename?: 'Mutation'
-  createPost: Post
+  createPost: PostResponse
   createUser: CreateUserResponse
 }
 
@@ -69,16 +69,30 @@ export type MutationCreateUserArgs = {
 
 export type Post = {
   __typename?: 'Post'
-  id: Scalars['ID']
-  title: Scalars['String']
+  author: User
   content: Scalars['String']
+  id: Scalars['ID']
   published: Scalars['Boolean']
+  title: Scalars['String']
+  votes: Scalars['Int']
+}
+
+export type PostResponse = {
+  __typename?: 'PostResponse'
+  error?: Maybe<Scalars['String']>
+  result?: Maybe<Array<Maybe<Post>>>
+}
+
+export type PostsResponse = {
+  __typename?: 'PostsResponse'
+  error?: Maybe<Scalars['String']>
+  result?: Maybe<Array<Post>>
 }
 
 export type Query = {
   __typename?: 'Query'
-  posts: Array<Maybe<Post>>
   me: MeResponse
+  posts: PostsResponse
 }
 
 export type Token = {
@@ -89,30 +103,76 @@ export type Token = {
 
 export type User = {
   __typename?: 'User'
-  id: Scalars['ID']
-  email: Scalars['String']
   createdAt: Scalars['DateTime']
+  email: Scalars['String']
+  id: Scalars['ID']
+}
+
+export type PostDataFragment = {
+  __typename?: 'Post'
+  title: string
+  content: string
+  published: boolean
+}
+
+export type CreatePostMutationVariables = Exact<{
+  title: Scalars['String']
+  content: Scalars['String']
+}>
+
+export type CreatePostMutation = {
+  __typename?: 'Mutation'
+  createPost: {
+    __typename?: 'PostResponse'
+    error?: string | null | undefined
+    result?:
+      | Array<
+          | { __typename?: 'Post'; title: string; content: string; published: boolean }
+          | null
+          | undefined
+        >
+      | null
+      | undefined
+  }
 }
 
 export type GetAllPostsQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetAllPostsQuery = { __typename?: 'Query' } & {
-  posts: Array<Maybe<{ __typename?: 'Post' } & Pick<Post, 'title' | 'content'>>>
+export type GetAllPostsQuery = {
+  __typename?: 'Query'
+  posts: {
+    __typename?: 'PostsResponse'
+    error?: string | null | undefined
+    result?:
+      | Array<{ __typename?: 'Post'; id: string; title: string; content: string; votes: number }>
+      | null
+      | undefined
+  }
 }
 
-export type UserInfoFragment = { __typename?: 'User' } & Pick<User, 'id' | 'email' | 'createdAt'>
+export type UserInfoFragment = { __typename?: 'User'; id: string; email: string; createdAt: any }
 
 export type SignupUserMutationVariables = Exact<{
   email: Scalars['String']
   password: Scalars['String']
 }>
 
-export type SignupUserMutation = { __typename?: 'Mutation' } & {
-  createUser: { __typename?: 'CreateUserResponse' } & Pick<CreateUserResponse, 'error'> & {
-      result?: Maybe<{ __typename?: 'User' } & UserInfoFragment>
-    }
+export type SignupUserMutation = {
+  __typename?: 'Mutation'
+  createUser: {
+    __typename?: 'CreateUserResponse'
+    error?: string | null | undefined
+    result?: { __typename?: 'User'; id: string; email: string; createdAt: any } | null | undefined
+  }
 }
 
+export const PostDataFragmentDoc = `
+    fragment PostData on Post {
+  title
+  content
+  published
+}
+    `
 export const UserInfoFragmentDoc = `
     fragment UserInfo on User {
   id
@@ -120,11 +180,37 @@ export const UserInfoFragmentDoc = `
   createdAt
 }
     `
+export const CreatePostDocument = `
+    mutation CreatePost($title: String!, $content: String!) {
+  createPost(params: {title: $title, content: $content}) {
+    result {
+      ...PostData
+    }
+    error
+  }
+}
+    ${PostDataFragmentDoc}`
+export const useCreatePostMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<CreatePostMutation, TError, CreatePostMutationVariables, TContext>
+) =>
+  useMutation<CreatePostMutation, TError, CreatePostMutationVariables, TContext>(
+    (variables?: CreatePostMutationVariables) =>
+      codegenClient<CreatePostMutation, CreatePostMutationVariables>(
+        CreatePostDocument,
+        variables
+      )(),
+    options
+  )
 export const GetAllPostsDocument = `
     query GetAllPosts {
   posts {
-    title
-    content
+    result {
+      id
+      title
+      content
+      votes
+    }
+    error
   }
 }
     `
