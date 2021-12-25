@@ -23,7 +23,7 @@ import { useSession, useAuth } from 'shared/utils'
 
 export default function Index() {
   const { logout } = useAuth()
-  useSession({})
+  // useSession({})
 
   const { data, isLoading } = useGetAllPostsQuery()
   const posts = data?.posts.result
@@ -37,7 +37,7 @@ export default function Index() {
     logout()
   }
 
-  if (isLoading) return <Box>Loading...</Box>
+  // if (isLoading) return <Box>Loading...</Box>
   return (
     <Box p='6'>
       <Heading as='h3' mb='5'>
@@ -89,11 +89,11 @@ export default function Index() {
                   <HStack color='grey'>
                     <HStack>
                       <Icon as={ChatIcon} />
-                      <Text as='i'>0</Text>
+                      <Text as='i'>{post.comments.count}</Text>
                     </HStack>
                     <HStack>
                       <Icon as={StarIcon} />
-                      <Text as='i'>{post.votes}</Text>
+                      <Text as='i'>{post.votes.count}</Text>
                     </HStack>
                   </HStack>
                 </VStack>

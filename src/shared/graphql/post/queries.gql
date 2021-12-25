@@ -1,12 +1,17 @@
 query GetAllPosts {
   posts {
+    error
     result {
       id
       title
       content
-      votes
+      votes {
+        count
+      }
+      comments {
+        count
+      }
     }
-    error
   }
 }
 

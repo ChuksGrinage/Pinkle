@@ -15,6 +15,22 @@ export type Scalars = {
   DateTime: any
 }
 
+export type Comment = {
+  __typename?: 'Comment'
+  author: User
+  content: Scalars['String']
+  createdAt: Scalars['DateTime']
+  id: Scalars['ID']
+  postId: Scalars['Int']
+  updateAt?: Maybe<Scalars['DateTime']>
+}
+
+export type Comments = {
+  __typename?: 'Comments'
+  count: Scalars['Int']
+  data?: Maybe<Array<Comment>>
+}
+
 export type CreatePostInput = {
   content?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
@@ -70,11 +86,14 @@ export type MutationCreateUserArgs = {
 export type Post = {
   __typename?: 'Post'
   author: User
+  comments: Comments
   content: Scalars['String']
+  createdAt: Scalars['DateTime']
   id: Scalars['ID']
   published: Scalars['Boolean']
   title: Scalars['String']
-  votes: Scalars['Int']
+  updateAt?: Maybe<Scalars['DateTime']>
+  votes: Votes
 }
 
 export type PostResponse = {
@@ -106,6 +125,12 @@ export type User = {
   createdAt: Scalars['DateTime']
   email: Scalars['String']
   id: Scalars['ID']
+}
+
+export type Votes = {
+  __typename?: 'Votes'
+  count: Scalars['Int']
+  data?: Maybe<Array<User>>
 }
 
 export type PostDataFragment = {
@@ -144,7 +169,14 @@ export type GetAllPostsQuery = {
     __typename?: 'PostsResponse'
     error?: string | null | undefined
     result?:
-      | Array<{ __typename?: 'Post'; id: string; title: string; content: string; votes: number }>
+      | Array<{
+          __typename?: 'Post'
+          id: string
+          title: string
+          content: string
+          votes: { __typename?: 'Votes'; count: number }
+          comments: { __typename?: 'Comments'; count: number }
+        }>
       | null
       | undefined
   }
@@ -204,13 +236,18 @@ export const useCreatePostMutation = <TError = unknown, TContext = unknown>(
 export const GetAllPostsDocument = `
     query GetAllPosts {
   posts {
+    error
     result {
       id
       title
       content
-      votes
+      votes {
+        count
+      }
+      comments {
+        count
+      }
     }
-    error
   }
 }
     `

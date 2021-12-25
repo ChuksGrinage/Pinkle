@@ -16,6 +16,7 @@ function useSession({
 		...queryConfig,
 		retry: false,
 		onSettled(data, error) {
+			console.log(data, 'here')
 			if (queryConfig.onSettled) queryConfig.onSettled(data, error)
 			// TODO: Need to figure something out if the refresh fails
 			if (error) return silentRefresh()
@@ -23,6 +24,7 @@ function useSession({
 			router.push(redirectTo)
 		},
 	})
+	console.log(query)
 	return [query.data, query.status === "loading"]
 }
 
