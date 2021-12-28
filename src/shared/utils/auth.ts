@@ -7,7 +7,7 @@ import { UserCredentials } from '../types'
 function useSession({
 	required = true,
 	redirectTo = "/login",
-	queryConfig = {},
+	queryConfig = {} as any,
 } = {}) {
 	const router = useRouter()
 	const { mutate: silentRefresh } = useMutation(() => client('refresh', {
