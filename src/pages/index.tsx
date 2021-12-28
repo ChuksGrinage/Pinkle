@@ -23,7 +23,7 @@ import { useSession, useAuth } from 'shared/utils'
 
 export default function Index() {
   const { logout } = useAuth()
-  // useSession({})
+  useSession()
 
   const { data, isLoading } = useGetAllPostsQuery()
   const posts = data?.posts.result

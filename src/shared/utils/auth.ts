@@ -1,6 +1,7 @@
 import { useRouter } from "next/router"
 import { useMutation, useQuery } from "react-query"
 import { client } from "."
+import { UserCredentials } from '../types'
 
 
 function useSession({
@@ -9,22 +10,27 @@ function useSession({
 	queryConfig = {},
 } = {}) {
 	const router = useRouter()
-	const { mutate: silentRefresh } = useMutation(() => client('/refresh'), {
+	const { mutate: silentRefresh } = useMutation(() => client('refresh', {
+		credentials: 'include',
+		method: 'POST'
+	}), {
 		onError: () => router.push('/login')
 	})
-	const query = useQuery(["session"], () => client('/me', { method: 'GET' }), {
+	const query = useQuery(["session"], () => client('me', { credentials: 'include' }), {
 		...queryConfig,
 		retry: false,
 		onSettled(data, error) {
-			console.log(data, 'here')
+			console.log({ data, error })
 			if (queryConfig.onSettled) queryConfig.onSettled(data, error)
 			// TODO: Need to figure something out if the refresh fails
-			if (error) return silentRefresh()
+			if (error) {
+				console.log('refreshing')
+				return silentRefresh()
+			}
 			if (data || !required) return
 			router.push(redirectTo)
 		},
 	})
-	console.log(query)
 	return [query.data, query.status === "loading"]
 }
 
@@ -32,32 +38,34 @@ function useSession({
 
 const useAuth = () => {
 	const router = useRouter()
-	const { mutate: getToken, error } = useMutation(userCredentials => client('/login', {
-		method: 'POST',
-		credentials: "include",
+	const { mutate: logout } = useMutation(() => client('logout', { credentials: 'include', method: 'DELETE' }), {
+		onSettled: () => router.push('/login')
+	})
+	const { mutate: getToken, error } = useMutation(userCredentials => client('login', {
+		credentials: 'include',
 		headers: {
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 		body: userCredentials
-	}))
-	const { mutate: logout } = useMutation(() => client('/logout', { method: 'DELETE' }), {
-		onSettled: () => router.push('/login')
+	}), {
+		onSuccess: () => {
+			router.push('/')
+		},
+		onError: () => {
+			if (router.pathname !== '/login') router.push('/login')
+			logout()
+		}
 	})
 
-	const login = (userCredentials: { email: string, password: string }) => {
-		// TODO: WTF is going on here; why do I need to do all of this to get it to work?!!
+
+	const login = ({ email, password }: UserCredentials) => {
 		const formBody = new FormData()
-		formBody.set("username", userCredentials.email)
-		formBody.set("password", userCredentials.password)
-		const data = new URLSearchParams(formBody)
-		getToken(data, {
-			onSuccess: () => {
-				router.push('/')
-			},
-			onError: () => {
-				if (router.pathname !== '/login') router.push('login')
-			}
-		})
+		formBody.append("username", email)
+		formBody.append("password", password)
+		const data = new URLSearchParams(formBody as any)
+		// TODO: getToken should not have variables as type void
+		// @ts-ignore
+		return getToken(data)
 	}
 
 	return { login, logout, error }
