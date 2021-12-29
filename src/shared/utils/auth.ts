@@ -20,11 +20,9 @@ function useSession({
 		...queryConfig,
 		retry: false,
 		onSettled(data, error) {
-			console.log({ data, error })
 			if (queryConfig.onSettled) queryConfig.onSettled(data, error)
 			// TODO: Need to figure something out if the refresh fails
 			if (error) {
-				console.log('refreshing')
 				return silentRefresh()
 			}
 			if (data || !required) return

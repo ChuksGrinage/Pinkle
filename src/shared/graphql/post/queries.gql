@@ -15,6 +15,20 @@ query GetAllPosts {
   }
 }
 
+query postById($postId: String!) {
+  postById(params: $postId) {
+    error
+    result {
+      id
+      title
+      content
+      published
+      createdAt
+      updateAt
+    }
+  }
+}
+
 # query GetPostById($postId: String!) {
 #   post(postId: $postId) {
 #     id

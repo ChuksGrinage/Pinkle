@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from 'react-query'
-import { codegenClient } from 'shared/utils'
+import { gqlClient } from 'shared/utils'
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
@@ -99,7 +99,7 @@ export type Post = {
 export type PostResponse = {
   __typename?: 'PostResponse'
   error?: Maybe<Scalars['String']>
-  result?: Maybe<Array<Maybe<Post>>>
+  result?: Maybe<Post>
 }
 
 export type PostsResponse = {
@@ -111,7 +111,12 @@ export type PostsResponse = {
 export type Query = {
   __typename?: 'Query'
   me: MeResponse
+  postById: PostResponse
   posts: PostsResponse
+}
+
+export type QueryPostByIdArgs = {
+  params: Scalars['String']
 }
 
 export type Token = {
@@ -151,11 +156,7 @@ export type CreatePostMutation = {
     __typename?: 'PostResponse'
     error?: string | null | undefined
     result?:
-      | Array<
-          | { __typename?: 'Post'; title: string; content: string; published: boolean }
-          | null
-          | undefined
-        >
+      | { __typename?: 'Post'; title: string; content: string; published: boolean }
       | null
       | undefined
   }
@@ -177,6 +178,30 @@ export type GetAllPostsQuery = {
           votes: { __typename?: 'Votes'; count: number }
           comments: { __typename?: 'Comments'; count: number }
         }>
+      | null
+      | undefined
+  }
+}
+
+export type PostByIdQueryVariables = Exact<{
+  postId: Scalars['String']
+}>
+
+export type PostByIdQuery = {
+  __typename?: 'Query'
+  postById: {
+    __typename?: 'PostResponse'
+    error?: string | null | undefined
+    result?:
+      | {
+          __typename?: 'Post'
+          id: string
+          title: string
+          content: string
+          published: boolean
+          createdAt: any
+          updateAt?: any | null | undefined
+        }
       | null
       | undefined
   }
@@ -227,10 +252,7 @@ export const useCreatePostMutation = <TError = unknown, TContext = unknown>(
 ) =>
   useMutation<CreatePostMutation, TError, CreatePostMutationVariables, TContext>(
     (variables?: CreatePostMutationVariables) =>
-      codegenClient<CreatePostMutation, CreatePostMutationVariables>(
-        CreatePostDocument,
-        variables
-      )(),
+      gqlClient<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, variables)(),
     options
   )
 export const GetAllPostsDocument = `
@@ -257,7 +279,31 @@ export const useGetAllPostsQuery = <TData = GetAllPostsQuery, TError = unknown>(
 ) =>
   useQuery<GetAllPostsQuery, TError, TData>(
     ['GetAllPosts', variables],
-    codegenClient<GetAllPostsQuery, GetAllPostsQueryVariables>(GetAllPostsDocument, variables),
+    gqlClient<GetAllPostsQuery, GetAllPostsQueryVariables>(GetAllPostsDocument, variables),
+    options
+  )
+export const PostByIdDocument = `
+    query postById($postId: String!) {
+  postById(params: $postId) {
+    error
+    result {
+      id
+      title
+      content
+      published
+      createdAt
+      updateAt
+    }
+  }
+}
+    `
+export const usePostByIdQuery = <TData = PostByIdQuery, TError = unknown>(
+  variables: PostByIdQueryVariables,
+  options?: UseQueryOptions<PostByIdQuery, TError, TData>
+) =>
+  useQuery<PostByIdQuery, TError, TData>(
+    ['postById', variables],
+    gqlClient<PostByIdQuery, PostByIdQueryVariables>(PostByIdDocument, variables),
     options
   )
 export const SignupUserDocument = `
@@ -275,9 +321,6 @@ export const useSignupUserMutation = <TError = unknown, TContext = unknown>(
 ) =>
   useMutation<SignupUserMutation, TError, SignupUserMutationVariables, TContext>(
     (variables?: SignupUserMutationVariables) =>
-      codegenClient<SignupUserMutation, SignupUserMutationVariables>(
-        SignupUserDocument,
-        variables
-      )(),
+      gqlClient<SignupUserMutation, SignupUserMutationVariables>(SignupUserDocument, variables)(),
     options
   )

@@ -20,7 +20,7 @@ module.exports = {
 			],
 			config: {
 				fetcher: {
-					func: 'shared/utils#codegenClient',
+					func: 'shared/utils#gqlClient',
 					// endpoint: URL,
 					// fetchParams: {
 					// 	credentials: 'include',

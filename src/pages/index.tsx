@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEventHandler } from 'react'
 import {
   Box,
   Button,
@@ -16,20 +16,27 @@ import {
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 
-import { useGetAllPostsQuery } from 'generated'
-import { useRouter } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import { AddIcon, ChatIcon, StarIcon } from '@chakra-ui/icons'
-import { useSession, useAuth } from 'shared/utils'
+import { useSession, useAuth, gqlClient } from 'shared/utils'
+import type { HTMLElementEvent } from 'shared/types'
+import { GetAllPostsDocument, GetAllPostsQuery, GetAllPostsQueryVariables, Post } from 'generated'
 
-export default function Index() {
+type IndexPageProps = {
+  posts: [Post]
+  error: string
+}
+
+export default function Index({ posts }: IndexPageProps) {
   const { logout } = useAuth()
-  useSession()
+  const [user] = useSession()
 
-  const { data, isLoading } = useGetAllPostsQuery()
-  const posts = data?.posts.result
   const [userInput, setUserInput] = React.useState('')
-  const { push } = useRouter()
-  const handleInputChange = e => {
+  const { push, isFallback } = useRouter()
+
+  if (isFallback) return <Box>Loading...</Box>
+
+  const handleInputChange = (e: HTMLElementEvent<HTMLInputElement>) => {
     setUserInput(e.currentTarget.value)
   }
 
@@ -37,13 +44,13 @@ export default function Index() {
     logout()
   }
 
-  // if (isLoading) return <Box>Loading...</Box>
   return (
     <Box p='6'>
       <Heading as='h3' mb='5'>
         Groups in your area
       </Heading>
       <HStack mb='5'>
+        {/* @ts-ignore */}
         <Input value={userInput} onChange={handleInputChange} w={400} />
         <Button colorScheme='blackAlpha' onClick={handleSearchClick}>
           Search
@@ -66,39 +73,35 @@ export default function Index() {
           colSpan={3}
         >
           <VStack align='stretch' divider={<StackDivider borderColor='gray.200' />} spacing={4}>
-            {isLoading ? (
-              <Box>Loading....</Box>
-            ) : (
-              posts?.map(post => (
-                <VStack spacing={5} align='stretch' key={post.id}>
+            {posts?.map(post => (
+              <VStack spacing={5} align='stretch' key={post.id}>
+                <HStack>
+                  <Avatar size='sm' />
+                  <Text color='teal' fontWeight='bold' flex='1'>
+                    {/* {post.author.firstName} */}
+                  </Text>
+                  <Text as='i' color='grey'>
+                    {/* {post.naturalCreatedAt} */}
+                  </Text>
+                </HStack>
+                <Heading fontSize='lg'>
+                  <NextLink href='/post/[id]' as={`/post/${post.id}`}>
+                    <Link>{post.title}</Link>
+                  </NextLink>
+                </Heading>
+                <Text as='p'>{post.content}...</Text>
+                <HStack color='grey'>
                   <HStack>
-                    <Avatar size='sm' />
-                    <Text color='teal' fontWeight='bold' flex='1'>
-                      {/* {post.author.firstName} */}
-                    </Text>
-                    <Text as='i' color='grey'>
-                      {/* {post.naturalCreatedAt} */}
-                    </Text>
+                    <Icon as={ChatIcon} />
+                    <Text as='i'>{post.comments.count}</Text>
                   </HStack>
-                  <Heading fontSize='lg'>
-                    <NextLink href='/post/[id]' as={`/post/${post.id}`}>
-                      <Link>{post.title}</Link>
-                    </NextLink>
-                  </Heading>
-                  <Text as='p'>{post.content}...</Text>
-                  <HStack color='grey'>
-                    <HStack>
-                      <Icon as={ChatIcon} />
-                      <Text as='i'>{post.comments.count}</Text>
-                    </HStack>
-                    <HStack>
-                      <Icon as={StarIcon} />
-                      <Text as='i'>{post.votes.count}</Text>
-                    </HStack>
+                  <HStack>
+                    <Icon as={StarIcon} />
+                    <Text as='i'>{post.votes.count}</Text>
                   </HStack>
-                </VStack>
-              ))
-            )}
+                </HStack>
+              </VStack>
+            ))}
           </VStack>
         </GridItem>
       </Grid>
@@ -106,4 +109,14 @@ export default function Index() {
   )
 }
 
-Index
+export async function getStaticProps() {
+  const { posts } = await gqlClient<GetAllPostsQuery, GetAllPostsQueryVariables>(
+    GetAllPostsDocument
+  )()
+  return {
+    props: {
+      posts: posts.result,
+      error: posts.error,
+    },
+  }
+}
