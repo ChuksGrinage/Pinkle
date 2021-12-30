@@ -46,7 +46,6 @@ export default function Index({ posts: initialPosts }: IndexPageProps) {
     refetch()
   }
   const posts = result || initialPosts
-  console.log(searchError)
   return (
     <Box p='6'>
       <Heading as='h3' mb='5'>
