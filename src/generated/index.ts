@@ -119,6 +119,16 @@ export type QueryPostByIdArgs = {
   params: Scalars['String']
 }
 
+export type QueryPostsArgs = {
+  params?: Maybe<SearchPostsInput>
+}
+
+export type SearchPostsInput = {
+  limit?: Maybe<Scalars['Int']>
+  search?: Maybe<Scalars['String']>
+  skip?: Maybe<Scalars['Int']>
+}
+
 export type Token = {
   __typename?: 'Token'
   accessToken: Scalars['String']
@@ -162,9 +172,13 @@ export type CreatePostMutation = {
   }
 }
 
-export type GetAllPostsQueryVariables = Exact<{ [key: string]: never }>
+export type PostsQueryVariables = Exact<{
+  search?: InputMaybe<Scalars['String']>
+  limit?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+}>
 
-export type GetAllPostsQuery = {
+export type PostsQuery = {
   __typename?: 'Query'
   posts: {
     __typename?: 'PostsResponse'
@@ -255,9 +269,9 @@ export const useCreatePostMutation = <TError = unknown, TContext = unknown>(
       gqlClient<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, variables)(),
     options
   )
-export const GetAllPostsDocument = `
-    query GetAllPosts {
-  posts {
+export const PostsDocument = `
+    query posts($search: String, $limit: Int, $skip: Int) {
+  posts(params: {search: $search, limit: $limit, skip: $skip}) {
     error
     result {
       id
@@ -273,13 +287,13 @@ export const GetAllPostsDocument = `
   }
 }
     `
-export const useGetAllPostsQuery = <TData = GetAllPostsQuery, TError = unknown>(
-  variables?: GetAllPostsQueryVariables,
-  options?: UseQueryOptions<GetAllPostsQuery, TError, TData>
+export const usePostsQuery = <TData = PostsQuery, TError = unknown>(
+  variables?: PostsQueryVariables,
+  options?: UseQueryOptions<PostsQuery, TError, TData>
 ) =>
-  useQuery<GetAllPostsQuery, TError, TData>(
-    ['GetAllPosts', variables],
-    gqlClient<GetAllPostsQuery, GetAllPostsQueryVariables>(GetAllPostsDocument, variables),
+  useQuery<PostsQuery, TError, TData>(
+    ['posts', variables],
+    gqlClient<PostsQuery, PostsQueryVariables>(PostsDocument, variables),
     options
   )
 export const PostByIdDocument = `

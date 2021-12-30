@@ -1,5 +1,5 @@
-query GetAllPosts {
-  posts {
+query posts($search: String, $limit: Int, $skip: Int) {
+  posts(params: { search: $search, limit: $limit, skip: $skip }) {
     error
     result {
       id

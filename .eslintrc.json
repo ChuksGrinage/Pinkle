@@ -19,7 +19,7 @@
 			"jsx": true
 		},
 		"ecmaVersion": 12,
-		"sourceType": "module",
+		"sourceType": "module"
 	},
 	"plugins": [
 		"react",
@@ -29,6 +29,7 @@
 		"require-jsdoc": "off",
 		"react/react-in-jsx-scope": "off",
 		"react/no-unescaped-entities": 0,
-		"no-console": "warn"
+		"no-console": "warn",
+		"no-unused-vars": "warn"
 	}
 }
