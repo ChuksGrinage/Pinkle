@@ -1,6 +1,23 @@
-import { Box, Flex, HStack, Link, IconButton, useDisclosure, Stack } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  HStack,
+  Link,
+  IconButton,
+  useDisclosure,
+  Stack,
+  Avatar,
+  Button,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
+} from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import NexLink from 'next/link'
+import { useRouter } from 'next/router'
+import { useAuth, useSession } from 'shared/utils'
 
 interface ILink {
   title: string
@@ -16,27 +33,13 @@ const Links: ILink[] = [
     title: 'Account',
     url: '/account',
   },
-  {
-    title: 'Login',
-    url: '/api/auth/login',
-  },
-  {
-    title: 'Logout',
-    url: '/api/auth/logout',
-  },
-  {
-    title: 'Session',
-    url: '/api/auth/me',
-  },
 ]
 
 export default function NavBar() {
-  // const { push } = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  // const { user, isLoading, error } = useUser()
-
-  // if (isLoading) return <div>Loading...</div>
-  // if (error) return <div>something went wrong...</div>
+  const { push } = useRouter()
+  const [user] = useSession()
+  const { logout } = useAuth()
 
   return (
     <>
@@ -58,7 +61,7 @@ export default function NavBar() {
               ))}
             </HStack>
           </HStack>
-          {/* {user ? (
+          {user ? (
             <Menu>
               <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
                 <Avatar size={'sm'} />
@@ -66,12 +69,12 @@ export default function NavBar() {
               <MenuList>
                 <MenuItem onClick={() => push('/account')}>Account</MenuItem>
                 <MenuDivider />
-                <MenuItem onClick={() => console.log('logout')}>Log Out</MenuItem>
+                <MenuItem onClick={() => logout()}>Log Out</MenuItem>
               </MenuList>
             </Menu>
           ) : (
             <a href='/api/auth/login'>Login</a>
-          )} */}
+          )}
         </Flex>
 
         {isOpen ? (

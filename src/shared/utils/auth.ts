@@ -1,14 +1,14 @@
 import { useRouter } from "next/router"
 import { useMutation, useQuery } from "react-query"
 import { client } from "."
-import { UserCredentials } from '../types'
+import { UserCredentials, UserInfo } from '../types'
 
 
 function useSession({
 	required = true,
 	redirectTo = "/login",
 	queryConfig = {} as any,
-} = {}) {
+} = {}): [UserInfo | undefined, boolean] {
 	const router = useRouter()
 	const { mutate: silentRefresh } = useMutation(() => client('refresh', {
 		credentials: 'include',
