@@ -41,28 +41,6 @@ export type CreateUserInput = {
   password: Scalars['String']
 }
 
-export type CreateUserResponse = {
-  __typename?: 'CreateUserResponse'
-  error?: Maybe<Scalars['String']>
-  result?: Maybe<User>
-}
-
-export type GetTokenInput = {
-  email: Scalars['String']
-  password: Scalars['String']
-}
-
-export type GetTokenResponse = {
-  __typename?: 'GetTokenResponse'
-  error?: Maybe<Scalars['String']>
-  token?: Maybe<Token>
-}
-
-export type InvalidUser = {
-  __typename?: 'InvalidUser'
-  message: Scalars['String']
-}
-
 export type MeResponse = {
   __typename?: 'MeResponse'
   error?: Maybe<Scalars['String']>
@@ -72,7 +50,8 @@ export type MeResponse = {
 export type Mutation = {
   __typename?: 'Mutation'
   createPost: PostResponse
-  createUser: CreateUserResponse
+  createUser: UserResponse
+  updateUser: UserResponse
 }
 
 export type MutationCreatePostArgs = {
@@ -81,6 +60,10 @@ export type MutationCreatePostArgs = {
 
 export type MutationCreateUserArgs = {
   params: CreateUserInput
+}
+
+export type MutationUpdateUserArgs = {
+  params: UpdateUserInput
 }
 
 export type Post = {
@@ -129,17 +112,26 @@ export type SearchPostsInput = {
   skip?: Maybe<Scalars['Int']>
 }
 
-export type Token = {
-  __typename?: 'Token'
-  accessToken: Scalars['String']
-  tokenType: Scalars['String']
+export type UpdateUserInput = {
+  data: UserUpdateData
+  id: Scalars['ID']
 }
 
 export type User = {
   __typename?: 'User'
-  createdAt: Scalars['DateTime']
   email: Scalars['String']
   id: Scalars['ID']
+  joinDate: Scalars['DateTime']
+}
+
+export type UserResponse = {
+  __typename?: 'UserResponse'
+  error?: Maybe<Scalars['String']>
+  result?: Maybe<User>
+}
+
+export type UserUpdateData = {
+  email?: Maybe<Scalars['String']>
 }
 
 export type Votes = {
@@ -221,7 +213,7 @@ export type PostByIdQuery = {
   }
 }
 
-export type UserInfoFragment = { __typename?: 'User'; id: string; email: string; createdAt: any }
+export type UserInfoFragment = { __typename?: 'User'; id: string; email: string; joinDate: any }
 
 export type SignupUserMutationVariables = Exact<{
   email: Scalars['String']
@@ -231,9 +223,23 @@ export type SignupUserMutationVariables = Exact<{
 export type SignupUserMutation = {
   __typename?: 'Mutation'
   createUser: {
-    __typename?: 'CreateUserResponse'
+    __typename?: 'UserResponse'
     error?: string | null | undefined
-    result?: { __typename?: 'User'; id: string; email: string; createdAt: any } | null | undefined
+    result?: { __typename?: 'User'; id: string; email: string; joinDate: any } | null | undefined
+  }
+}
+
+export type UpdateUserMutationVariables = Exact<{
+  id: Scalars['ID']
+  email?: InputMaybe<Scalars['String']>
+}>
+
+export type UpdateUserMutation = {
+  __typename?: 'Mutation'
+  updateUser: {
+    __typename?: 'UserResponse'
+    error?: string | null | undefined
+    result?: { __typename?: 'User'; id: string; email: string; joinDate: any } | null | undefined
   }
 }
 
@@ -248,7 +254,7 @@ export const UserInfoFragmentDoc = `
     fragment UserInfo on User {
   id
   email
-  createdAt
+  joinDate
 }
     `
 export const CreatePostDocument = `
@@ -336,5 +342,23 @@ export const useSignupUserMutation = <TError = unknown, TContext = unknown>(
   useMutation<SignupUserMutation, TError, SignupUserMutationVariables, TContext>(
     (variables?: SignupUserMutationVariables) =>
       gqlClient<SignupUserMutation, SignupUserMutationVariables>(SignupUserDocument, variables)(),
+    options
+  )
+export const UpdateUserDocument = `
+    mutation UpdateUser($id: ID!, $email: String) {
+  updateUser(params: {id: $id, data: {email: $email}}) {
+    result {
+      ...UserInfo
+    }
+    error
+  }
+}
+    ${UserInfoFragmentDoc}`
+export const useUpdateUserMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<UpdateUserMutation, TError, UpdateUserMutationVariables, TContext>
+) =>
+  useMutation<UpdateUserMutation, TError, UpdateUserMutationVariables, TContext>(
+    (variables?: UpdateUserMutationVariables) =>
+      gqlClient<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, variables)(),
     options
   )

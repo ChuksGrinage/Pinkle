@@ -9,3 +9,12 @@ mutation SignupUser(
     error
   }
 }
+
+mutation UpdateUser($id: ID!, $email: String) {
+  updateUser(params: { id: $id, data: { email: $email } }) {
+    result {
+      ...UserInfo
+    }
+    error
+  }
+}

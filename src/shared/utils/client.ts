@@ -2,6 +2,7 @@ const gqlClient = <TData, TVariables>(query: string, variables?: TVariables): ((
 	return async () => {
 		const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/graphql`, {
 			method: 'POST',
+			credentials: 'include',
 			headers: {
 				'Content-Type': 'application/json',
 			},

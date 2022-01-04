@@ -1,7 +1,7 @@
 fragment UserInfo on User {
   id
   email
-  createdAt
+  joinDate
 }
 
 # input StudentInput {

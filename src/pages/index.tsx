@@ -80,15 +80,15 @@ export default function Index({ posts: initialPosts }: IndexPageProps) {
             <VStack align='stretch' divider={<StackDivider borderColor='gray.200' />} spacing={4}>
               {posts?.map(post => (
                 <VStack spacing={5} align='stretch' key={post.id}>
-                  <HStack>
+                  {/* <HStack>
                     <Avatar size='sm' />
                     <Text color='teal' fontWeight='bold' flex='1'>
-                      {/* {post.author.firstName} */}
+                      {post.author.firstName}
                     </Text>
                     <Text as='i' color='grey'>
-                      {/* {post.naturalCreatedAt} */}
+                      {post.naturalCreatedAt}
                     </Text>
-                  </HStack>
+                  </HStack> */}
                   <Heading fontSize='lg'>
                     <NextLink href='/post/[id]' as={`/post/${post.id}`}>
                       <Link>{post.title}</Link>
